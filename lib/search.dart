@@ -33,7 +33,7 @@ class SearchScreen extends StatelessWidget {
                   );
                 },
 
-                    icon: Icon(Icons.favorite))
+                    icon: Icon(Icons.menu))
               ),
             ),
             // TextField to input location B
@@ -48,7 +48,7 @@ class SearchScreen extends StatelessWidget {
                     );
                   },
 
-                      icon: Icon(Icons.favorite))
+                      icon: Icon(Icons.menu))
               ),
             ),
 
