@@ -41,6 +41,8 @@ dependencies:
   dio: ^5.0.0 # For making HTTP requests to Nominatim API
   http: ^0.13.4
   flutter_dotenv: ^5.0.2
+  timezone:
+  flutter_local_notifications:
   swipe_refresh:
   geolocator:
   csv:

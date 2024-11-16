@@ -18,27 +18,21 @@ class favouriteState extends State<Favourites>
         title: Text(style: TextStyle(color: Colors.white), "Favourites Page"),  // The title shown in the app's top bar
       ),
       // Padding widget adds space around the child widgets for better layout
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),  // 20 pixels of padding on all sides
-        // Column widget lays out its children in a vertical direction
-        child: Column(
-          children: <Widget>[
-            Text('Favourites Database To Go Here'),
-
-
-            SizedBox(height: 20),  // Adds 20 pixels of vertical space
-
-            FloatingActionButton(
-              onPressed: () {
-                // pop the screen
-                var value = 'pop';
-                Navigator.pop(context, value);
+      body: Center(
+        child:Padding(
+            padding: const EdgeInsets.all(20.0),  // 20 pixels of padding on all sides
+            // Column widget lays out its children in a vertical direction
+            child: IconButton(icon: const Icon(Icons.refresh),
+              onPressed: (){
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('No Favourites found'),
+                      action: SnackBarAction(label: 'Okay', onPressed: (){}),
+                    )
+                );
               },
-              child: Icon(Icons.save),
-            ),
-          ],
+            )
         ),
-      ),
+      )
     );
   }
 }

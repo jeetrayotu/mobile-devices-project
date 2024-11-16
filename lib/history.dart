@@ -4,6 +4,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'notifications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'; // Import for notifications
 
 class Suggestion {
   late String displayName;
@@ -144,13 +146,24 @@ class History extends StatefulWidget {
 
 class historyState extends State<History> {
   late SuggestionModel? model;
+  bool showSnackBar = false;
+  Notifications notif = Notifications();
+
+  void initState()
+  {
+    notif.init();
+    super.initState();
+  }
 
   historyState(this.model);
 
   Future<void> _deleteSuggestion(Suggestion suggestion) async {
+    notif.sendNotificationNow('Delete Suggestion', 'Suggestion Deleted', 'Delete');
+
     await model!.deleteSuggestionByName(suggestion.displayName);
     setState(() {});
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -182,18 +195,20 @@ class historyState extends State<History> {
                 }
 
                 if (snapshot.data!.isEmpty) {
-                  return const Center(
+                  return Center(
                       child: Padding(
-                          padding: EdgeInsets.all(70),
-                          child: Text(
-                            'No suggestions found. Add them by searching for locations on the previous screen.',
-                            // Adapted From:
-                            // Answer: https://stackoverflow.com/a/53407050
-                            // User: https://stackoverflow.com/users/5922070/shelly-pritchard
-                            textAlign: TextAlign.center,
-                            // Adapted From: https://api.flutter.dev/flutter/painting/TextStyle-class.html
-                            style: TextStyle(fontSize: 25),
-                          ))); // Display message if no students are found
+                          padding: const EdgeInsets.all(70),
+                          child: IconButton(icon: const Icon(Icons.refresh),
+                            onPressed: (){
+                              // Display message if no values are found
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('No suggestions found. Add them by searching for locations on the previous screen'),
+                                  action: SnackBarAction(label: 'Okay', onPressed: (){}),
+                                  )
+                              );
+                            },
+                          )
+                      ));
                 }
 
                 return ListView.builder(
