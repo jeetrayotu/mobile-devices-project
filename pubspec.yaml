@@ -45,6 +45,8 @@ dependencies:
   geolocator:
   csv:
   sqflite:
+  firebase_core:
+  cloud_firestore:
 
 dev_dependencies:
   flutter_test:

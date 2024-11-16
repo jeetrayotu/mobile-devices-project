@@ -8,9 +8,18 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'favourites.dart';
 import 'history.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   // await dotenv.load(fileName: "key.env"); // Ensure dotenv is loaded
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
@@ -39,7 +48,7 @@ class MyMapPage extends StatefulWidget {
 class _MyMapPageState extends State<MyMapPage> {
   final MapController _mapController = MapController();
   final TextEditingController _searchController = TextEditingController();
-  List<Map<String, dynamic>> _suggestions = [];
+  List<Suggestion> _suggestions = [];
 
   var textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
   var headerStyle = TextStyle(fontSize: 50, fontWeight: FontWeight.bold);
@@ -49,11 +58,42 @@ class _MyMapPageState extends State<MyMapPage> {
   LatLng? _destination; // Selected destination coordinates
   LatLng?
       _meetup; // Meetup spot halfway between destination and current location.
+  List<LatLng> _routePoints = []; // Points for the polyline route
+  SuggestionModel? _model;
+
+  @override
+  void initState() {
+    super.initState();
+    _initDatabase();
+  }
+
+  Future<void> _initDatabase() async {
+    var dbPath = await getDatabasesPath();
+    String path = join(
+        dbPath, 'suggestiondatabase.db');
+
+    _model = SuggestionModel(await openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute(
+            "CREATE TABLE history(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
+        await db.execute(
+            "CREATE TABLE favorites(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
+      },
+    ));
+    // TODO
+    // for (Suggestion suggestion in await _model!.getAllSuggestions(comparator: _comparator)) {
+    //   _model!.deleteSuggestionByName(suggestion.displayName);
+    // }
+    print(await _model!.getAllSuggestions());
+    setState(() {});
+  }
 
   _goToHistory(context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => History()),
+      MaterialPageRoute(builder: (context) => History(title: "History", model: _model)),
     );
   }
 
@@ -91,38 +131,37 @@ class _MyMapPageState extends State<MyMapPage> {
       );
 
       setState(() {
-        _suggestions = response.data.map<Map<String, dynamic>>((item) {
-          return {
-            'display_name': item['display_name'],
-            'lat': double.parse(item['lat']),
-            'lon': double.parse(item['lon']),
-          };
-        }).toList();
+        _suggestions = response.data.map<Suggestion>((suggestion) => Suggestion.fromMap(suggestion)).toList();
       });
     } catch (e) {
       print('Error fetching suggestions: $e');
     }
   }
 
-  void _onSuggestionTap(double lat, double lon) {
+  Future<void> _onSuggestionTap(Suggestion suggestion) async {
     setState(() {
-      _destination = LatLng(lat, lon);
+      _destination = suggestion.coordinates;
       _suggestions = [];
       _searchController.clear();
     });
     _mapController.move(_destination!, 13.0);
+    await _model!.insertSuggestion(suggestion);
+    await _fetchMeetup(); // Fetch the meetup location when a destination is selected
+    await _fetchRoute(); // Fetch the route when a destination is selected
   }
 
   // Calculate the halfway point between two coordinates
-  LatLng calculateHalfwayPoint(LatLng coord1, LatLng coord2) {
-    return LatLng((coord1.latitude + coord2.latitude) / 2,
+  LatLng calculateHalfwayPoint(LatLng coord1, LatLng? coord2) {
+    return LatLng((coord1.latitude + coord2!.latitude) / 2,
         (coord1.longitude + coord2.longitude) / 2);
   }
 
-  Future<List<LatLng>> _fetchRoute() async {
-    // Fetch the meetup location when a destination is selected
-    // Adapted From: https://ask.openrouteservice.org/t/find-nearest-x/3996
-    LatLng _halfway = calculateHalfwayPoint(_currentCenter, _destination!);
+  // Adapted From: https://ask.openrouteservice.org/t/find-nearest-x/3996
+  // And: https://openrouteservice.org/dev/#/api-docs
+  Future<void> _fetchMeetup() async {
+    if (_destination == null) return;
+
+    LatLng _halfway = calculateHalfwayPoint(_currentCenter, _destination);
     List<double> _halfwayCoordinates = [_halfway.longitude, _halfway.latitude];
     // [-78.88780834814952, 43.917912400000006]
     // {"type": "Point", "coordinates": [-78.88780834814952, 43.917912400000006]}
@@ -135,10 +174,10 @@ class _MyMapPageState extends State<MyMapPage> {
           headers: {
             'Authorization': _orsApiKey,
             'Accept':
-            'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+                'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
             'Content-Type': 'application/json; charset=utf-8'
-            // Adapted From: https://chatgpt.com/share/6737943d-d888-8000-9fa7-a08c34c1d057
           },
+          // Adapted From: https://chatgpt.com/share/6737943d-d888-8000-9fa7-a08c34c1d057
           body: jsonEncode({
             'request': 'pois',
             'geometry': {
@@ -158,11 +197,11 @@ class _MyMapPageState extends State<MyMapPage> {
 
         if (data['features'] != null && data['features'].isNotEmpty) {
           final coordinates =
-          data['features'][0]['geometry']['coordinates'] as List;
+              data['features'][0]['geometry']['coordinates'] as List;
 
-          // setState(() {
+          setState(() {
             _meetup = LatLng(coordinates[1], coordinates[0]);
-          // });
+          });
           print("Meetup Coordinates: $_meetup"); // Debug print
         } else {
           print("No meetup coordinates in the response.");
@@ -173,6 +212,10 @@ class _MyMapPageState extends State<MyMapPage> {
     } catch (e) {
       print('Error fetching meetup coordinates: $e');
     }
+  }
+
+  Future<void> _fetchRoute() async {
+    if (_destination == null || _meetup == null) return;
 
     final routeUrl = Uri.parse(
       // 'https://api.openrouteservice.org/v2/directions/foot-walking?api_key=$_orsApiKey&start=${_currentCenter.longitude},${_currentCenter.latitude}&end=${_destination!.longitude},${_destination!.latitude}',
@@ -205,128 +248,21 @@ class _MyMapPageState extends State<MyMapPage> {
           final coordinates =
               data['features'][0]['geometry']['coordinates'] as List;
 
-          // Points for the polyline route
-          List<LatLng> _routePoints = coordinates.map((coord) {
-            return LatLng(coord[1], coord[0]); // Convert to LatLng
-          }).toList();
+          setState(() {
+            _routePoints = coordinates.map((coord) {
+              return LatLng(coord[1], coord[0]); // Convert to LatLng
+            }).toList();
+          });
           print("Route points: $_routePoints"); // Debug print
-          return _routePoints;
         } else {
           print("No route found in the response.");
-          return [];
         }
       } else {
         print('Failed to load route: ${response.statusCode}');
-        return [];
       }
     } catch (e) {
       print('Error fetching route: $e');
-      return [];
     }
-  }
-
-  Widget mapMaker({List<LatLng>? points}) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                    hintText: "Search destination",
-                    border: const OutlineInputBorder(),
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          var result = showOptions(context);
-                        },
-                        icon: const Icon(Icons.menu))),
-                onChanged: _getSuggestions,
-              ),
-              if (_suggestions.isNotEmpty)
-                Container(
-                  height: 150,
-                  child: ListView.builder(
-                    itemCount: _suggestions.length,
-                    itemBuilder: (context, index) {
-                      final suggestion = _suggestions[index];
-                      return ListTile(
-                        title: Text(suggestion['display_name']),
-                        onTap: () => setState(() => _onSuggestionTap(
-                          suggestion['lat'],
-                          suggestion['lon'],
-                        )),
-                      );
-                    },
-                  ),
-                ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(
-              center: _currentCenter,
-              zoom: 13.0,
-            ),
-            children: [
-              TileLayer(
-                urlTemplate:
-                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                subdomains: ['a', 'b', 'c'],
-              ),
-              MarkerLayer(
-                markers: [
-                  Marker(
-                    width: 80.0,
-                    height: 80.0,
-                    point: _currentCenter,
-                    builder: (ctx) => const Icon(
-                      Icons.my_location,
-                      color: Colors.blue,
-                      size: 40.0,
-                    ),
-                  ),
-                  if (_destination != null)
-                    Marker(
-                      width: 80.0,
-                      height: 80.0,
-                      point: _destination!,
-                      builder: (ctx) => const Icon(
-                        Icons.location_pin,
-                        color: Colors.red,
-                        size: 40.0,
-                      ),
-                    ),
-                  if (_destination != null)
-                    Marker(
-                      width: 80.0,
-                      height: 80.0,
-                      point: _meetup!,
-                      builder: (ctx) => const Icon(
-                        Icons.location_pin,
-                        color: Colors.green,
-                        size: 40.0,
-                      ),
-                    ),
-                ],
-              ),
-              PolylineLayer(
-                polylines: [
-                  Polyline(
-                    points: points ?? [],
-                    strokeWidth: 4.0,
-                    color: Colors.blue, // Route color
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 
   @override
@@ -351,28 +287,127 @@ class _MyMapPageState extends State<MyMapPage> {
               icon: Icon(
                 Icons.history,
                 color: Colors.white,
+              )),
+          IconButton(
+              onPressed: () async {
+                for (Suggestion suggestion in await _model!.getAllSuggestions()) {
+                  _model!.updateFireSuggestion(suggestion);
+                }
+              },
+              icon: Icon(
+                Icons.upload,
+                color: Colors.white,
+              )),
+          IconButton(
+              onPressed: () async {
+                for (Suggestion suggestion in await _model!.getAllFireSuggestions()) {
+                  _model!.insertSuggestion(suggestion);
+                }
+              },
+              icon: Icon(
+                Icons.download,
+                color: Colors.white,
               ))
         ],
       ),
-      body: FutureBuilder<List<LatLng>>(
-          future: _fetchRoute(), // Fetch the route when a destination is selected,
-          builder: (BuildContext futureContext,
-              // Adapted From:
-              // Answer: https://stackoverflow.com/a/67482488
-              // User: https://stackoverflow.com/users/6413387/towhid
-              AsyncSnapshot<List<LatLng>> snapshot) {
-            // if (!snapshot.hasData) {
-            //   return const Center(
-            //       child:
-            //           CircularProgressIndicator()); // Show loading indicator while fetching data
-            // }
-
-            if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return mapMaker();
-            }
-
-            return mapMaker(points: snapshot.data!);
-          }),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                      hintText: "Search destination",
+                      border: const OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            var result = showOptions(context);
+                          },
+                          icon: const Icon(Icons.menu))),
+                  onChanged: _getSuggestions,
+                ),
+                if (_suggestions.isNotEmpty)
+                  Container(
+                    height: 150,
+                    child: ListView.builder(
+                      itemCount: _suggestions.length,
+                      itemBuilder: (context, index) {
+                        final suggestion = _suggestions[index];
+                        return ListTile(
+                          title: Text(suggestion.displayName),
+                          onTap: () => _onSuggestionTap(suggestion),
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: FlutterMap(
+              mapController: _mapController,
+              options: MapOptions(
+                center: _currentCenter,
+                zoom: 13.0,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate:
+                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  subdomains: ['a', 'b', 'c'],
+                ),
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      width: 80.0,
+                      height: 80.0,
+                      point: _currentCenter,
+                      builder: (ctx) => const Icon(
+                        Icons.my_location,
+                        color: Colors.blue,
+                        size: 40.0,
+                      ),
+                    ),
+                    if (_destination != null)
+                      Marker(
+                        width: 80.0,
+                        height: 80.0,
+                        point: _destination!,
+                        builder: (ctx) => const Icon(
+                          Icons.location_pin,
+                          color: Colors.red,
+                          size: 40.0,
+                        ),
+                      ),
+                    if (_destination != null)
+                      Marker(
+                        width: 80.0,
+                        height: 80.0,
+                        point: _meetup!,
+                        builder: (ctx) => const Icon(
+                          Icons.location_pin,
+                          color: Colors.green,
+                          size: 40.0,
+                        ),
+                      ),
+                  ],
+                ),
+                PolylineLayer(
+                  polylines: [
+                    Polyline(
+                      points: _routePoints,
+                      strokeWidth: 4.0,
+                      color: Colors.blue, // Route color
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
