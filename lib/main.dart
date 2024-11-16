@@ -276,7 +276,7 @@ class _MyMapPageState extends State<MyMapPage> {
               onPressed: () {
                 _goToFavourites(context);
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.favorite,
                 color: Colors.white,
               )),
@@ -284,7 +284,7 @@ class _MyMapPageState extends State<MyMapPage> {
               onPressed: () {
                 _goToHistory(context);
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.history,
                 color: Colors.white,
               )),
@@ -294,7 +294,7 @@ class _MyMapPageState extends State<MyMapPage> {
                   _model!.updateFireSuggestion(suggestion);
                 }
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.upload,
                 color: Colors.white,
               )),
@@ -304,7 +304,7 @@ class _MyMapPageState extends State<MyMapPage> {
                   _model!.insertSuggestion(suggestion);
                 }
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.download,
                 color: Colors.white,
               ))
