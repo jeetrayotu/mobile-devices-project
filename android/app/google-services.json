@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "583944360360",
+    "project_id": "mobile-devices-project",
+    "storage_bucket": "mobile-devices-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:583944360360:android:70738d1cefd247cdc70d9d",
+        "android_client_info": {
+          "package_name": "org.syvl.meet_you_there.meet_you_there"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcOoFUT_oz5yl3uYLBhIf53uLiinycgiI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
