@@ -13,6 +13,8 @@ import 'package:path/path.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:flutter_i18n/loaders/file_translation_loader.dart';
 
 void main() async {
   // await dotenv.load(fileName: "key.env"); // Ensure dotenv is loaded
@@ -31,6 +33,22 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      builder: FlutterI18n.rootAppBuilder(), // Initialize FlutterI18n for localization
+      localizationsDelegates: [
+        // Set up localization files
+        FlutterI18nDelegate(
+          translationLoader: FileTranslationLoader(
+            basePath: 'assets/i18n', // Path to localization files
+            useCountryCode: false, // Ignore country code in locale (e.g., "en" instead of "en_US")
+            fallbackFile: 'en', // Default language if the locale is not found
+          ),
+        ),
+      ],
+      supportedLocales: [
+        Locale('en'), // English
+        Locale('hi'), //Hindi
+        Locale('ru'), //Russian
+      ],
       home: MyMapPage(),
     );
   }
@@ -265,12 +283,17 @@ class _MyMapPageState extends State<MyMapPage> {
     }
   }
 
+  Future<void> _setLocale(Locale newLocale) async {
+    await FlutterI18n.refresh(context as BuildContext, newLocale);
+    setState(() {}); // Refresh the UI after locale change
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Meet Me There'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text('Meet Me There', style: TextStyle(fontSize: 20),),
         actions: [
           IconButton(
               onPressed: () {
@@ -278,7 +301,6 @@ class _MyMapPageState extends State<MyMapPage> {
               },
               icon: const Icon(
                 Icons.favorite,
-                color: Colors.white,
               )),
           IconButton(
               onPressed: () {
@@ -286,7 +308,6 @@ class _MyMapPageState extends State<MyMapPage> {
               },
               icon: const Icon(
                 Icons.history,
-                color: Colors.white,
               )),
           IconButton(
               onPressed: () async {
@@ -296,7 +317,6 @@ class _MyMapPageState extends State<MyMapPage> {
               },
               icon: const Icon(
                 Icons.upload,
-                color: Colors.white,
               )),
           IconButton(
               onPressed: () async {
@@ -306,8 +326,15 @@ class _MyMapPageState extends State<MyMapPage> {
               },
               icon: const Icon(
                 Icons.download,
-                color: Colors.white,
-              ))
+              )),
+          IconButton(
+              onPressed: () async{
+                var language = await showDialog(
+                    context: context,
+                    builder: (context) => translate());
+                _setLocale(language);
+              },
+              icon: Icon(Icons.translate))
         ],
       ),
       body: Column(
@@ -427,6 +454,42 @@ class showPopupState extends State<showPopup> {
           onPressed: () {
             Navigator.pop(
                 context, 'WORD'); // Closes the dialog and returns true
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class translate extends StatefulWidget
+{
+  @override
+  State<StatefulWidget> createState() => translateState();
+}
+
+class translateState extends State<translate>
+{
+  Widget build(BuildContext context)
+  {
+    return SimpleDialog(
+      title: Text('Select a language'),
+      children: [
+        SimpleDialogOption(
+          child: const Text('English'),
+          onPressed: () {
+            Navigator.pop(context, 'en'); // Closes the dialog and returns true
+          },
+        ),
+        SimpleDialogOption(
+          child: const Text('Hindi'),
+          onPressed: () {
+            Navigator.pop(context, 'hi'); // Closes the dialog and returns true
+          },
+        ),
+        SimpleDialogOption(
+          child: const Text('Russian'),
+          onPressed: () {
+            Navigator.pop(context, 'ru'); // Closes the dialog and returns true
           },
         ),
       ],

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "org.syvl.meet_you_there.meet_you_there.app-mergeDebugResources-28:/values-ne/values-ne.xml",
+            "outputFile": "org.syvl.meet_you_there.meet_you_there.app-mergeDebugResources-29:/values-ne/values-ne.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-3\\25303bfa731ad2ab17d3513b6410954f\\transformed\\core-1.13.1\\res\\values-ne\\values-ne.xml",

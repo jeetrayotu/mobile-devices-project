@@ -37,18 +37,24 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_map: ^4.0.0
   latlong2: ^0.8.0
-  geocoding: ^2.0.5 # Add this for location search functionality
+  geocoding:
+#  ^2.0.5 # Add this for location search functionality
   dio: ^5.0.0 # For making HTTP requests to Nominatim API
   http: ^0.13.4
   flutter_dotenv: ^5.0.2
   timezone:
   flutter_local_notifications:
   swipe_refresh:
-  geolocator:
+  geolocator: ^10.1.0
   csv:
   sqflite:
   firebase_core:
   cloud_firestore:
+  flutter_i18n: ^0.36.2
+
+dependency_overrides:
+  intl: any
+  http: any
 
 dev_dependencies:
   flutter_test:

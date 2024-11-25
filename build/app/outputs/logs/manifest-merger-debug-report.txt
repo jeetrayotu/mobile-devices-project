@@ -1,13 +1,13 @@
 -- Merging decision tree log ---
 application
-INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\main\AndroidManifest.xml:2:5-33:19
-INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml
-MERGED from [:cloud_firestore] C:\Users\Owner\StudioProjects\mobile-devices-project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-13:19
-MERGED from [:cloud_firestore] C:\Users\Owner\StudioProjects\mobile-devices-project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-13:19
-MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\mobile-devices-project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-13:19
-MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\mobile-devices-project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-13:19
-MERGED from [:geolocator_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-13:19
-MERGED from [:geolocator_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-13:19
+INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\main\AndroidManifest.xml:2:5-33:19
+INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml
+MERGED from [:cloud_firestore] C:\Users\Owner\StudioProjects\project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-13:19
+MERGED from [:cloud_firestore] C:\Users\Owner\StudioProjects\project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-13:19
+MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-13:19
+MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-13:19
+MERGED from [:geolocator_android] C:\Users\Owner\StudioProjects\project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-13:19
+MERGED from [:geolocator_android] C:\Users\Owner\StudioProjects\project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-13:19
 MERGED from [com.google.android.gms:play-services-location:21.2.0] C:\Users\Owner\.gradle\caches\transforms-3\82be496a8e17cb3c531477774f51a7aa\transformed\jetified-play-services-location-21.2.0\AndroidManifest.xml:7:5-20
 MERGED from [com.google.android.gms:play-services-location:21.2.0] C:\Users\Owner\.gradle\caches\transforms-3\82be496a8e17cb3c531477774f51a7aa\transformed\jetified-play-services-location-21.2.0\AndroidManifest.xml:7:5-20
 MERGED from [androidx.window:window:1.2.0] C:\Users\Owner\.gradle\caches\transforms-3\aefb9ac74908ffdd3c190cdd84606721\transformed\jetified-window-1.2.0\AndroidManifest.xml:22:5-29:19
@@ -39,23 +39,25 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\Owner\.gradle\cach
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\Owner\.gradle\caches\transforms-3\21a2ef68fac47b993492b414dca82304\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\Owner\.gradle\caches\transforms-3\21a2ef68fac47b993492b414dca82304\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
 	android:extractNativeLibs
-		INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml
+		INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.13.1] C:\Users\Owner\.gradle\caches\transforms-3\25303bfa731ad2ab17d3513b6410954f\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
 	android:name
-		INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\main\AndroidManifest.xml
 manifest
-ADDED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\main\AndroidManifest.xml:1:1-45:12
-MERGED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\main\AndroidManifest.xml:1:1-45:12
-INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml:1:1-7:12
-INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml:1:1-7:12
-INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml:1:1-7:12
-MERGED from [:cloud_firestore] C:\Users\Owner\StudioProjects\mobile-devices-project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-15:12
-MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\mobile-devices-project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-15:12
-MERGED from [:geocoding_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geocoding_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
-MERGED from [:geolocator_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-15:12
-MERGED from [:sqflite_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\sqflite_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
+ADDED from C:\Users\Owner\StudioProjects\project\android\app\src\main\AndroidManifest.xml:1:1-45:12
+MERGED from C:\Users\Owner\StudioProjects\project\android\app\src\main\AndroidManifest.xml:1:1-45:12
+INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml:1:1-7:12
+INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml:1:1-7:12
+INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml:1:1-7:12
+MERGED from [:cloud_firestore] C:\Users\Owner\StudioProjects\project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-15:12
+MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-15:12
+MERGED from [:flutter_local_notifications] C:\Users\Owner\StudioProjects\project\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-10:12
+MERGED from [:geocoding_android] C:\Users\Owner\StudioProjects\project\build\geocoding_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
+MERGED from [:geolocator_android] C:\Users\Owner\StudioProjects\project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-15:12
+MERGED from [:sqflite_android] C:\Users\Owner\StudioProjects\project\build\sqflite_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.gms:play-services-location:21.2.0] C:\Users\Owner\.gradle\caches\transforms-3\82be496a8e17cb3c531477774f51a7aa\transformed\jetified-play-services-location-21.2.0\AndroidManifest.xml:2:1-9:12
+MERGED from [androidx.media:media:1.1.0] C:\Users\Owner\.gradle\caches\transforms-3\7b278f869f5a3e1838c7575b1fb631f8\transformed\media-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.window:window:1.2.0] C:\Users\Owner\.gradle\caches\transforms-3\aefb9ac74908ffdd3c190cdd84606721\transformed\jetified-window-1.2.0\AndroidManifest.xml:17:1-31:12
 MERGED from [androidx.window:window-java:1.2.0] C:\Users\Owner\.gradle\caches\transforms-3\7287e5ea7b95eddddc908bf3cac69c02\transformed\jetified-window-java-1.2.0\AndroidManifest.xml:17:1-21:12
 MERGED from [com.google.firebase:firebase-firestore:25.1.1] C:\Users\Owner\.gradle\caches\transforms-3\0c89f7e1e56a74fe9c2a62c6f86d375b\transformed\jetified-firebase-firestore-25.1.1\AndroidManifest.xml:2:1-26:12
@@ -90,51 +92,55 @@ MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Owner\.gradle\ca
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\Owner\.gradle\caches\transforms-3\21a2ef68fac47b993492b414dca82304\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\Owner\.gradle\caches\transforms-3\1dda91cea8b6ffa6ec06977b18db4d16\transformed\core-runtime-2.2.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.window.extensions.core:core:1.0.0] C:\Users\Owner\.gradle\caches\transforms-3\411aa761d6d68814c57f6496aab48ca0\transformed\jetified-core-1.0.0\AndroidManifest.xml:2:1-7:12
+MERGED from [io.grpc:grpc-android:1.62.2] C:\Users\Owner\.gradle\caches\transforms-3\90ab6d94f16dab5a7f37da2742257654\transformed\jetified-grpc-android-1.62.2\AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.annotation:annotation-experimental:1.4.0] C:\Users\Owner\.gradle\caches\transforms-3\1ec53da6c2610fe11ade5cfb819eefba\transformed\jetified-annotation-experimental-1.4.0\AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.firebase:protolite-well-known-types:18.0.0] C:\Users\Owner\.gradle\caches\transforms-3\878dafb226586231176393de6481a44b\transformed\jetified-protolite-well-known-types-18.0.0\AndroidManifest.xml:2:1-11:12
-MERGED from [io.grpc:grpc-android:1.62.2] C:\Users\Owner\.gradle\caches\transforms-3\90ab6d94f16dab5a7f37da2742257654\transformed\jetified-grpc-android-1.62.2\AndroidManifest.xml:2:1-9:12
 	package
-		INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml
+		INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml
 	android:versionName
-		INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml
+		INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml
 	android:versionCode
-		INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml
+		INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml
 	xmlns:android
-		ADDED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\main\AndroidManifest.xml:1:11-69
+		ADDED from C:\Users\Owner\StudioProjects\project\android\app\src\main\AndroidManifest.xml:1:11-69
 queries
-ADDED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\main\AndroidManifest.xml:39:5-44:15
+ADDED from C:\Users\Owner\StudioProjects\project\android\app\src\main\AndroidManifest.xml:39:5-44:15
 intent#action:name:android.intent.action.PROCESS_TEXT+data:mimeType:text/plain
-ADDED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\main\AndroidManifest.xml:40:9-43:18
+ADDED from C:\Users\Owner\StudioProjects\project\android\app\src\main\AndroidManifest.xml:40:9-43:18
 action#android.intent.action.PROCESS_TEXT
-ADDED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\main\AndroidManifest.xml:41:13-72
+ADDED from C:\Users\Owner\StudioProjects\project\android\app\src\main\AndroidManifest.xml:41:13-72
 	android:name
-		ADDED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\main\AndroidManifest.xml:41:21-70
+		ADDED from C:\Users\Owner\StudioProjects\project\android\app\src\main\AndroidManifest.xml:41:21-70
 data
-ADDED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\main\AndroidManifest.xml:42:13-50
+ADDED from C:\Users\Owner\StudioProjects\project\android\app\src\main\AndroidManifest.xml:42:13-50
 	android:mimeType
-		ADDED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\main\AndroidManifest.xml:42:19-48
+		ADDED from C:\Users\Owner\StudioProjects\project\android\app\src\main\AndroidManifest.xml:42:19-48
 uses-permission#android.permission.INTERNET
-ADDED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml:6:5-66
+ADDED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml:6:5-66
 MERGED from [com.google.firebase:firebase-firestore:25.1.1] C:\Users\Owner\.gradle\caches\transforms-3\0c89f7e1e56a74fe9c2a62c6f86d375b\transformed\jetified-firebase-firestore-25.1.1\AndroidManifest.xml:11:5-67
 MERGED from [com.google.firebase:firebase-firestore:25.1.1] C:\Users\Owner\.gradle\caches\transforms-3\0c89f7e1e56a74fe9c2a62c6f86d375b\transformed\jetified-firebase-firestore-25.1.1\AndroidManifest.xml:11:5-67
 	android:name
-		ADDED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml:6:22-64
+		ADDED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml:6:22-64
 uses-sdk
-INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml
-INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml
-MERGED from [:cloud_firestore] C:\Users\Owner\StudioProjects\mobile-devices-project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:cloud_firestore] C:\Users\Owner\StudioProjects\mobile-devices-project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\mobile-devices-project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\mobile-devices-project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:geocoding_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geocoding_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:geocoding_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geocoding_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:geolocator_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:geolocator_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:sqflite_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\sqflite_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
-MERGED from [:sqflite_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\sqflite_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml
+INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml
+MERGED from [:cloud_firestore] C:\Users\Owner\StudioProjects\project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:cloud_firestore] C:\Users\Owner\StudioProjects\project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:flutter_local_notifications] C:\Users\Owner\StudioProjects\project\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:flutter_local_notifications] C:\Users\Owner\StudioProjects\project\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:geocoding_android] C:\Users\Owner\StudioProjects\project\build\geocoding_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:geocoding_android] C:\Users\Owner\StudioProjects\project\build\geocoding_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:geolocator_android] C:\Users\Owner\StudioProjects\project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:geolocator_android] C:\Users\Owner\StudioProjects\project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:sqflite_android] C:\Users\Owner\StudioProjects\project\build\sqflite_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:sqflite_android] C:\Users\Owner\StudioProjects\project\build\sqflite_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.gms:play-services-location:21.2.0] C:\Users\Owner\.gradle\caches\transforms-3\82be496a8e17cb3c531477774f51a7aa\transformed\jetified-play-services-location-21.2.0\AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.gms:play-services-location:21.2.0] C:\Users\Owner\.gradle\caches\transforms-3\82be496a8e17cb3c531477774f51a7aa\transformed\jetified-play-services-location-21.2.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.media:media:1.1.0] C:\Users\Owner\.gradle\caches\transforms-3\7b278f869f5a3e1838c7575b1fb631f8\transformed\media-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.media:media:1.1.0] C:\Users\Owner\.gradle\caches\transforms-3\7b278f869f5a3e1838c7575b1fb631f8\transformed\media-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.window:window:1.2.0] C:\Users\Owner\.gradle\caches\transforms-3\aefb9ac74908ffdd3c190cdd84606721\transformed\jetified-window-1.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.window:window:1.2.0] C:\Users\Owner\.gradle\caches\transforms-3\aefb9ac74908ffdd3c190cdd84606721\transformed\jetified-window-1.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.window:window-java:1.2.0] C:\Users\Owner\.gradle\caches\transforms-3\7287e5ea7b95eddddc908bf3cac69c02\transformed\jetified-window-java-1.2.0\AndroidManifest.xml:19:5-44
@@ -203,20 +209,20 @@ MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\Owner\.gradle\cache
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\Owner\.gradle\caches\transforms-3\1dda91cea8b6ffa6ec06977b18db4d16\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.window.extensions.core:core:1.0.0] C:\Users\Owner\.gradle\caches\transforms-3\411aa761d6d68814c57f6496aab48ca0\transformed\jetified-core-1.0.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.window.extensions.core:core:1.0.0] C:\Users\Owner\.gradle\caches\transforms-3\411aa761d6d68814c57f6496aab48ca0\transformed\jetified-core-1.0.0\AndroidManifest.xml:5:5-44
+MERGED from [io.grpc:grpc-android:1.62.2] C:\Users\Owner\.gradle\caches\transforms-3\90ab6d94f16dab5a7f37da2742257654\transformed\jetified-grpc-android-1.62.2\AndroidManifest.xml:5:5-44
+MERGED from [io.grpc:grpc-android:1.62.2] C:\Users\Owner\.gradle\caches\transforms-3\90ab6d94f16dab5a7f37da2742257654\transformed\jetified-grpc-android-1.62.2\AndroidManifest.xml:5:5-44
 MERGED from [androidx.annotation:annotation-experimental:1.4.0] C:\Users\Owner\.gradle\caches\transforms-3\1ec53da6c2610fe11ade5cfb819eefba\transformed\jetified-annotation-experimental-1.4.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.annotation:annotation-experimental:1.4.0] C:\Users\Owner\.gradle\caches\transforms-3\1ec53da6c2610fe11ade5cfb819eefba\transformed\jetified-annotation-experimental-1.4.0\AndroidManifest.xml:5:5-44
 MERGED from [com.google.firebase:protolite-well-known-types:18.0.0] C:\Users\Owner\.gradle\caches\transforms-3\878dafb226586231176393de6481a44b\transformed\jetified-protolite-well-known-types-18.0.0\AndroidManifest.xml:7:5-9:41
 MERGED from [com.google.firebase:protolite-well-known-types:18.0.0] C:\Users\Owner\.gradle\caches\transforms-3\878dafb226586231176393de6481a44b\transformed\jetified-protolite-well-known-types-18.0.0\AndroidManifest.xml:7:5-9:41
-MERGED from [io.grpc:grpc-android:1.62.2] C:\Users\Owner\.gradle\caches\transforms-3\90ab6d94f16dab5a7f37da2742257654\transformed\jetified-grpc-android-1.62.2\AndroidManifest.xml:5:5-44
-MERGED from [io.grpc:grpc-android:1.62.2] C:\Users\Owner\.gradle\caches\transforms-3\90ab6d94f16dab5a7f37da2742257654\transformed\jetified-grpc-android-1.62.2\AndroidManifest.xml:5:5-44
 	android:targetSdkVersion
-		INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml
+		INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from C:\Users\Owner\StudioProjects\mobile-devices-project\android\app\src\debug\AndroidManifest.xml
+		INJECTED from C:\Users\Owner\StudioProjects\project\android\app\src\debug\AndroidManifest.xml
 service#com.google.firebase.components.ComponentDiscoveryService
-ADDED from [:cloud_firestore] C:\Users\Owner\StudioProjects\mobile-devices-project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-12:19
-MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\mobile-devices-project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-12:19
-MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\mobile-devices-project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-12:19
+ADDED from [:cloud_firestore] C:\Users\Owner\StudioProjects\project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-12:19
+MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-12:19
+MERGED from [:firebase_core] C:\Users\Owner\StudioProjects\project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-12:19
 MERGED from [com.google.firebase:firebase-firestore:25.1.1] C:\Users\Owner\.gradle\caches\transforms-3\0c89f7e1e56a74fe9c2a62c6f86d375b\transformed\jetified-firebase-firestore-25.1.1\AndroidManifest.xml:14:9-23:19
 MERGED from [com.google.firebase:firebase-firestore:25.1.1] C:\Users\Owner\.gradle\caches\transforms-3\0c89f7e1e56a74fe9c2a62c6f86d375b\transformed\jetified-firebase-firestore-25.1.1\AndroidManifest.xml:14:9-23:19
 MERGED from [com.google.firebase:firebase-common-ktx:21.0.0] C:\Users\Owner\.gradle\caches\transforms-3\1e3e33bb5fb0d47da7b8574f0414b734\transformed\jetified-firebase-common-ktx-21.0.0\AndroidManifest.xml:9:9-15:19
@@ -230,29 +236,37 @@ MERGED from [com.google.firebase:firebase-common:21.0.0] C:\Users\Owner\.gradle\
 	android:directBootAware
 		ADDED from [com.google.firebase:firebase-common:21.0.0] C:\Users\Owner\.gradle\caches\transforms-3\eca4333cb219929078e4b58375a8cccc\transformed\jetified-firebase-common-21.0.0\AndroidManifest.xml:32:13-43
 	android:name
-		ADDED from [:cloud_firestore] C:\Users\Owner\StudioProjects\mobile-devices-project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:8:18-89
+		ADDED from [:cloud_firestore] C:\Users\Owner\StudioProjects\project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:8:18-89
 meta-data#com.google.firebase.components:io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreRegistrar
-ADDED from [:cloud_firestore] C:\Users\Owner\StudioProjects\mobile-devices-project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
+ADDED from [:cloud_firestore] C:\Users\Owner\StudioProjects\project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
 	android:value
-		ADDED from [:cloud_firestore] C:\Users\Owner\StudioProjects\mobile-devices-project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:11:17-82
+		ADDED from [:cloud_firestore] C:\Users\Owner\StudioProjects\project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:11:17-82
 	android:name
-		ADDED from [:cloud_firestore] C:\Users\Owner\StudioProjects\mobile-devices-project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:10:17-134
+		ADDED from [:cloud_firestore] C:\Users\Owner\StudioProjects\project\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:10:17-134
 meta-data#com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseCoreRegistrar
-ADDED from [:firebase_core] C:\Users\Owner\StudioProjects\mobile-devices-project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
+ADDED from [:firebase_core] C:\Users\Owner\StudioProjects\project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-11:85
 	android:value
-		ADDED from [:firebase_core] C:\Users\Owner\StudioProjects\mobile-devices-project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:11:17-82
+		ADDED from [:firebase_core] C:\Users\Owner\StudioProjects\project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:11:17-82
 	android:name
-		ADDED from [:firebase_core] C:\Users\Owner\StudioProjects\mobile-devices-project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:10:17-124
+		ADDED from [:firebase_core] C:\Users\Owner\StudioProjects\project\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:10:17-124
+uses-permission#android.permission.VIBRATE
+ADDED from [:flutter_local_notifications] C:\Users\Owner\StudioProjects\project\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-66
+	android:name
+		ADDED from [:flutter_local_notifications] C:\Users\Owner\StudioProjects\project\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:7:22-63
+uses-permission#android.permission.POST_NOTIFICATIONS
+ADDED from [:flutter_local_notifications] C:\Users\Owner\StudioProjects\project\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:8:5-77
+	android:name
+		ADDED from [:flutter_local_notifications] C:\Users\Owner\StudioProjects\project\build\flutter_local_notifications\intermediates\merged_manifest\debug\AndroidManifest.xml:8:22-74
 service#com.baseflow.geolocator.GeolocatorLocationService
-ADDED from [:geolocator_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-12:56
+ADDED from [:geolocator_android] C:\Users\Owner\StudioProjects\project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-12:56
 	android:enabled
-		ADDED from [:geolocator_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:10:13-35
+		ADDED from [:geolocator_android] C:\Users\Owner\StudioProjects\project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:10:13-35
 	android:exported
-		ADDED from [:geolocator_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-37
+		ADDED from [:geolocator_android] C:\Users\Owner\StudioProjects\project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-37
 	android:foregroundServiceType
-		ADDED from [:geolocator_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-53
+		ADDED from [:geolocator_android] C:\Users\Owner\StudioProjects\project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-53
 	android:name
-		ADDED from [:geolocator_android] C:\Users\Owner\StudioProjects\mobile-devices-project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-77
+		ADDED from [:geolocator_android] C:\Users\Owner\StudioProjects\project\build\geolocator_android\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-77
 uses-library#androidx.window.extensions
 ADDED from [androidx.window:window:1.2.0] C:\Users\Owner\.gradle\caches\transforms-3\aefb9ac74908ffdd3c190cdd84606721\transformed\jetified-window-1.2.0\AndroidManifest.xml:23:9-25:40
 	android:required

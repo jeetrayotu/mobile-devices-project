@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "org.syvl.meet_you_there.meet_you_there.app-mergeDebugResources-28:/values-th/values-th.xml",
+            "outputFile": "org.syvl.meet_you_there.meet_you_there.app-mergeDebugResources-29:/values-th/values-th.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Owner\\.gradle\\caches\\transforms-3\\69c62fd927db6c21028fb331b212d767\\transformed\\jetified-play-services-base-18.3.0\\res\\values-th\\values.xml",

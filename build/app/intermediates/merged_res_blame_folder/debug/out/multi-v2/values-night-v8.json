@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "org.syvl.meet_you_there.meet_you_there.app-mergeDebugResources-28:/values-night-v8/values-night-v8.xml",
+            "outputFile": "org.syvl.meet_you_there.meet_you_there.app-mergeDebugResources-29:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Owner\\StudioProjects\\mobile-devices-project\\android\\app\\src\\main\\res\\values-night\\styles.xml",
+                    "source": "C:\\Users\\Owner\\StudioProjects\\project\\android\\app\\src\\main\\res\\values-night\\styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",
