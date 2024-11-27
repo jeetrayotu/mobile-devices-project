@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'history.dart';
 import 'notifications.dart';
+import 'suggestion.dart';
 
 class Favourites extends StatefulWidget {
   final SuggestionModel? model;
@@ -10,120 +11,121 @@ class Favourites extends StatefulWidget {
   final String title;
 
   @override
-  State<StatefulWidget> createState() => favouritesState(model);
+  State<StatefulWidget> createState() => _FavouritesState(model);
 }
 
-class favouritesState extends State<Favourites> {
+class _FavouritesState extends State<Favourites> {
   late SuggestionModel? model;
-  bool showSnackBar = false;
   Notifications notif = Notifications();
 
-  void initState()
-  {
+  _FavouritesState(this.model);
+
+  @override
+  void initState() {
     notif.init();
     super.initState();
   }
 
-  favouritesState(this.model);
-
   Future<void> _deleteSuggestion(Suggestion suggestion) async {
-    notif.sendNotificationNow('Delete Suggestion', 'Suggestion Deleted', 'Delete');
+    try {
+      notif.sendNotificationNow(
+        'Delete Suggestion',
+        'Suggestion "${suggestion.displayName}" has been deleted',
+        'Delete',
+      );
 
-    await model!.deleteSuggestionByName(suggestion.displayName);
-    setState(() {});
+      await model?.deleteSuggestionByName(suggestion.displayName);
+      setState(() {});
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting suggestion: $e')),
+      );
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Scaffold provides the overall structure for the screen with an AppBar and body
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
-            style: const TextStyle(color: Colors.white),
-            widget.title), // The title shown in the app's top bar
+          widget.title,
+          style: const TextStyle(color: Colors.white),
+        ),
       ),
-      // Adapted From: https://chatgpt.com/share/671e8456-8e90-8000-b9de-afb2cd0d21a4
-      // And:
-      // Answer: https://stackoverflow.com/a/76126936
-      // User: https://stackoverflow.com/users/1817391/aleksey
       body: model == null
           ? const Center(child: CircularProgressIndicator())
           : FutureBuilder<List<Suggestion>>(
-        future: model!.getAllSuggestions(table: "favourites"),
-        builder: (BuildContext futureContext,
-            // Adapted From:
-            // Answer: https://stackoverflow.com/a/67482488
-            // User: https://stackoverflow.com/users/6413387/towhid
-            AsyncSnapshot<List<Suggestion>> snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-                child:
-                CircularProgressIndicator()); // Show loading indicator while fetching data
+        future: model!.getAllSuggestions(),
+        // future: model!.getAllSuggestions(table: "favourites"),
+        builder: (BuildContext context, AsyncSnapshot<List<Suggestion>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
           }
 
-          if (snapshot.data!.isEmpty) {
+          if (snapshot.hasError) {
             return Center(
-                child: Padding(
-                    padding: const EdgeInsets.all(70),
-                    child: IconButton(icon: const Icon(Icons.refresh),
-                      onPressed: (){
-                        // Display message if no values are found
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('No suggestions found. Add them by searching for locations on the previous screen'),
-                              action: SnackBarAction(label: 'Okay', onPressed: (){}),
-                            )
-                        );
-                      },
-                    )
-                ));
+              child: Text(
+                'Error loading favourites: ${snapshot.error}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextButton.icon(
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('No favourites found. Tap to refresh.'),
+                  onPressed: () {
+                    setState(() {});
+                  },
+                ),
+              ),
+            );
           }
 
           return ListView.builder(
             itemCount: snapshot.data!.length,
-            itemBuilder: (itemContext, index) {
-              Suggestion suggestion = snapshot.data![index];
-              return Dismissible(
-                  key: Key(suggestion.displayName),
-                  // Adapted From: https://www.dhiwise.com/post/how-to-implement-flutter-swipe-action-cell-in-mobile-app
-                  background: const Row(children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.only(left: 12),
-                        child: Icon(Icons.edit, color: Colors.blue)),
-                    Spacer(),
-                  ]),
-                  secondaryBackground: const Row(children: <Widget>[
-                    Spacer(),
-                    Padding(
-                        padding: EdgeInsets.only(right: 12),
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                        ))
-                  ]),
+            itemBuilder: (context, index) {
+              final suggestion = snapshot.data![index];
 
-                  // Adapted From: https://docs.flutter.dev/cookbook/gestures/dismissible
-                  // And:
-                  // Answer: https://stackoverflow.com/a/64669848
-                  // User: https://stackoverflow.com/users/8532605/unicornsonlsd
-                  confirmDismiss: (direction) async {
-                    // Adapted From: https://www.dhiwise.com/post/how-to-implement-flutter-swipe-action-cell-in-mobile-app
-                    if (direction == DismissDirection.endToStart) {
-                      await _deleteSuggestion(suggestion);
-                      return true;
-                    }
-                    return false;
-                  },
-                  child: Card(
-                      color: Colors.blue,
-                      child: ListTile(
-                        title: Text(suggestion.displayName,
-                            style: const TextStyle(color: Colors.white)),
-                        subtitle: Text(
-                            "Latitude: ${suggestion.coordinates.latitude} | Longitude: ${suggestion.coordinates.longitude}",
-                            style: const TextStyle(color: Colors.white)),
-                      )));
+              return Dismissible(
+                key: Key(suggestion.displayName),
+                background: Container(
+                  color: Colors.blue,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(left: 20),
+                  child: const Icon(Icons.edit, color: Colors.white),
+                ),
+                secondaryBackground: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 20),
+                  child: const Icon(Icons.delete, color: Colors.white),
+                ),
+                confirmDismiss: (direction) async {
+                  if (direction == DismissDirection.endToStart) {
+                    await _deleteSuggestion(suggestion);
+                    return true;
+                  }
+                  return false;
+                },
+                child: Card(
+                  margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  child: ListTile(
+                    title: Text(
+                      suggestion.displayName,
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                    subtitle: Text(
+                      "Latitude: ${suggestion.coordinates.latitude}, Longitude: ${suggestion.coordinates.longitude}",
+                    ),
+                  ),
+                ),
+              );
             },
           );
         },

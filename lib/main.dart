@@ -99,10 +99,10 @@ class _MyMapPageState extends State<MyMapPage> {
   }
 
   _goToFavourites(context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Favourites()),
-    );
+    // final result = await Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => Favourites()),
+    // );
   }
 
   showOptions(BuildContext context) async {
