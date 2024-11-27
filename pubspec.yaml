@@ -38,7 +38,7 @@ dependencies:
   flutter_map: ^4.0.0
   latlong2: ^0.8.0
   geocoding: ^2.0.5 # Add this for location search functionality
-  dio: ^5.0.0 # For making HTTP requests to Nominatim API
+  dio: ^5.7.0 # For making HTTP requests to Nominatim API
   http: ^0.13.4
   flutter_dotenv: ^5.0.2
   timezone:

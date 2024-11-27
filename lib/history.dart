@@ -5,133 +5,134 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'notifications.dart';
+import 'suggestion.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'; // Import for notifications
 
-class Suggestion {
-  late String displayName;
-  late LatLng coordinates;
-  DocumentReference? reference;
-
-  Suggestion(this.displayName, this.coordinates, {this.reference});
-
-  Suggestion.fromMap(Map<String, dynamic> map) {
-    displayName = map['display_name'] ?? map['displayName'];
-    double latitude;
-    if (map['lat'] == null) {
-      latitude = double.parse(map['lat']);
-    } else if (map['latitude'] is double) {
-      latitude = map['latitude'];
-    } else {
-      latitude = double.parse(map['latitude']);
-    }
-    double longitude;
-    if (map['lon'] == null) {
-      longitude = double.parse(map['lon']);
-    } else if (map['latitude'] is double) {
-      longitude = map['longitude'];
-    } else {
-      longitude = double.parse(map['longitude']);
-    }
-    coordinates = LatLng(latitude, longitude);
-    reference = map['reference'];
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'displayName': displayName,
-      'latitude': coordinates.latitude.toString(),
-      'longitude': coordinates.longitude.toString(),
-    };
-  }
-}
-
-class SuggestionModel {
-  Database database;
-  FirebaseFirestore firebase = FirebaseFirestore.instance;
-
-  SuggestionModel(this.database);
-
-  Future<void> insertSuggestion(Suggestion suggestion,
-      {String table = 'history'}) async {
-    await database.insert(
-      table,
-      suggestion.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  // Adapted From: https://firebase.google.com/docs/firestore/quickstart#add_data
-  Future<void> insertFireSuggestion(Suggestion suggestion,
-      {String table = 'history'}) async {
-    await firebase
-        .collection(table)
-        .add(suggestion.toMap())
-        .then((DocumentReference doc) => suggestion.reference = doc);
-  }
-
-  Future<void> updateSuggestion(Suggestion suggestion,
-      {String table = 'history'}) async {
-    await database.update(
-      table,
-      suggestion.toMap(),
-      where: "displayName = ?",
-      whereArgs: [suggestion.displayName],
-    );
-  }
-
-  // Adapted From: https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
-  Future<void> updateFireSuggestion(Suggestion suggestion,
-      {String table = 'history'}) async {
-    if (suggestion.reference == null) {
-      await insertFireSuggestion(suggestion);
-    } else {
-      await firebase
-          .collection(table)
-          .doc(suggestion.reference!.id)
-          .update(suggestion.toMap());
-    }
-  }
-
-  Future<void> deleteSuggestionByName(String displayName,
-      {String table = 'history'}) async {
-    await database.delete(
-      table,
-      where: 'displayName = ?',
-      whereArgs: [displayName],
-    );
-  }
-
-  // Adapted From: https://firebase.google.com/docs/firestore/manage-data/delete-data#delete_documents
-  Future<void> deleteFireSuggestionById(String referenceId,
-      {String table = 'history'}) async {
-    await firebase.collection(table).doc(referenceId).delete();
-  }
-
-  // Method to read rows from the 'grades' table [7]
-  Future<List<Suggestion>> getAllSuggestions({String table = 'history'}) async {
-    final List<Map<String, dynamic>> maps = await database.query(table);
-    List<Suggestion> suggestions =
-        maps.map((suggestion) => Suggestion.fromMap(suggestion)).toList();
-    print(suggestions);
-    return suggestions;
-  }
-
-  // Adapted From: https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection
-  // And:
-  // Answer: https://stackoverflow.com/a/45200659
-  // User: https://stackoverflow.com/users/5189745/hadrien-lejard
-  Future<List<Suggestion>> getAllFireSuggestions(
-      {String table = 'history'}) async {
-    List<Suggestion> suggestions = [];
-    await firebase.collection(table).get().then((querySnapshot) {
-      suggestions = querySnapshot.docs
-          .map((docSnapshot) => Suggestion.fromMap(
-              {...docSnapshot.data(), "reference": docSnapshot.reference}))
-          .toList();
-    });
-    return suggestions;
-  }
-}
+// class Suggestion {
+//   late String displayName;
+//   late LatLng coordinates;
+//   DocumentReference? reference;
+//
+//   Suggestion(this.displayName, this.coordinates, {this.reference});
+//
+//   Suggestion.fromMap(Map<String, dynamic> map) {
+//     displayName = map['display_name'] ?? map['displayName'];
+//     double latitude;
+//     if (map['lat'] == null) {
+//       latitude = double.parse(map['lat']);
+//     } else if (map['latitude'] is double) {
+//       latitude = map['latitude'];
+//     } else {
+//       latitude = double.parse(map['latitude']);
+//     }
+//     double longitude;
+//     if (map['lon'] == null) {
+//       longitude = double.parse(map['lon']);
+//     } else if (map['latitude'] is double) {
+//       longitude = map['longitude'];
+//     } else {
+//       longitude = double.parse(map['longitude']);
+//     }
+//     coordinates = LatLng(latitude, longitude);
+//     reference = map['reference'];
+//   }
+//
+//   Map<String, dynamic> toMap() {
+//     return {
+//       'displayName': displayName,
+//       'latitude': coordinates.latitude.toString(),
+//       'longitude': coordinates.longitude.toString(),
+//     };
+//   }
+// }
+//
+// class SuggestionModel {
+//   Database database;
+//   FirebaseFirestore firebase = FirebaseFirestore.instance;
+//
+//   SuggestionModel(this.database);
+//
+//   Future<void> insertSuggestion(Suggestion suggestion,
+//       {String table = 'history'}) async {
+//     await database.insert(
+//       table,
+//       suggestion.toMap(),
+//       conflictAlgorithm: ConflictAlgorithm.replace,
+//     );
+//   }
+//
+//   // Adapted From: https://firebase.google.com/docs/firestore/quickstart#add_data
+//   Future<void> insertFireSuggestion(Suggestion suggestion,
+//       {String table = 'history'}) async {
+//     await firebase
+//         .collection(table)
+//         .add(suggestion.toMap())
+//         .then((DocumentReference doc) => suggestion.reference = doc);
+//   }
+//
+//   Future<void> updateSuggestion(Suggestion suggestion,
+//       {String table = 'history'}) async {
+//     await database.update(
+//       table,
+//       suggestion.toMap(),
+//       where: "displayName = ?",
+//       whereArgs: [suggestion.displayName],
+//     );
+//   }
+//
+//   // Adapted From: https://firebase.google.com/docs/firestore/manage-data/add-data#update-data
+//   Future<void> updateFireSuggestion(Suggestion suggestion,
+//       {String table = 'history'}) async {
+//     if (suggestion.reference == null) {
+//       await insertFireSuggestion(suggestion);
+//     } else {
+//       await firebase
+//           .collection(table)
+//           .doc(suggestion.reference!.id)
+//           .update(suggestion.toMap());
+//     }
+//   }
+//
+//   Future<void> deleteSuggestionByName(String displayName,
+//       {String table = 'history'}) async {
+//     await database.delete(
+//       table,
+//       where: 'displayName = ?',
+//       whereArgs: [displayName],
+//     );
+//   }
+//
+//   // Adapted From: https://firebase.google.com/docs/firestore/manage-data/delete-data#delete_documents
+//   Future<void> deleteFireSuggestionById(String referenceId,
+//       {String table = 'history'}) async {
+//     await firebase.collection(table).doc(referenceId).delete();
+//   }
+//
+//   // Method to read rows from the 'grades' table [7]
+//   Future<List<Suggestion>> getAllSuggestions({String table = 'history'}) async {
+//     final List<Map<String, dynamic>> maps = await database.query(table);
+//     List<Suggestion> suggestions =
+//         maps.map((suggestion) => Suggestion.fromMap(suggestion)).toList();
+//     print(suggestions);
+//     return suggestions;
+//   }
+//
+//   // Adapted From: https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection
+//   // And:
+//   // Answer: https://stackoverflow.com/a/45200659
+//   // User: https://stackoverflow.com/users/5189745/hadrien-lejard
+//   Future<List<Suggestion>> getAllFireSuggestions(
+//       {String table = 'history'}) async {
+//     List<Suggestion> suggestions = [];
+//     await firebase.collection(table).get().then((querySnapshot) {
+//       suggestions = querySnapshot.docs
+//           .map((docSnapshot) => Suggestion.fromMap(
+//               {...docSnapshot.data(), "reference": docSnapshot.reference}))
+//           .toList();
+//     });
+//     return suggestions;
+//   }
+// }
 
 class History extends StatefulWidget {
   final SuggestionModel? model;

@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'favourites.dart';
-import 'history.dart';
+import 'history.dart'; // Use an alias to distinguish
+import 'suggestion.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -83,8 +84,8 @@ class _MyMapPageState extends State<MyMapPage> {
       },
     ));
     // TODO
-    // for (Suggestion suggestion in await _model!.getAllSuggestions(comparator: _comparator)) {
-    //   _model!.deleteSuggestionByName(suggestion.displayName);
+    // for (Suggestion suggestion.dart in await _model!.getAllSuggestions(comparator: _comparator)) {
+    //   _model!.deleteSuggestionByName(suggestion.dart.displayName);
     // }
     print(await _model!.getAllSuggestions());
     setState(() {});
@@ -120,21 +121,16 @@ class _MyMapPageState extends State<MyMapPage> {
     }
 
     try {
-      final response = await Dio().get(
-        'https://nominatim.openstreetmap.org/search',
-        queryParameters: {
-          'q': input,
-          'format': 'json',
-          'addressdetails': 1,
-          'limit': 5,
-        },
-      );
+      final suggestions = await _model!.searchSuggestions(input);
 
       setState(() {
-        _suggestions = response.data.map<Suggestion>((suggestion) => Suggestion.fromMap(suggestion)).toList();
+        _suggestions = suggestions;
       });
     } catch (e) {
-      print('Error fetching suggestions: $e');
+      print('Error getting suggestions: $e');
+      setState(() {
+        _suggestions = [];
+      });
     }
   }
 

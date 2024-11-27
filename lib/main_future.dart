@@ -83,8 +83,8 @@ class _MyMapPageState extends State<MyMapPage> {
       },
     ));
     // TODO
-    // for (Suggestion suggestion in await _model!.getAllSuggestions(comparator: _comparator)) {
-    //   _model!.deleteSuggestionByName(suggestion.displayName);
+    // for (Suggestion suggestion.dart in await _model!.getAllSuggestions(comparator: _comparator)) {
+    //   _model!.deleteSuggestionByName(suggestion.dart.displayName);
     // }
     setState(() {});
   }
