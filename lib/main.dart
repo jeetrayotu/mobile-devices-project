@@ -120,6 +120,7 @@ class _MyMapPageState extends State<MyMapPage> {
     }
 
     try {
+      print(input);
       final response = await Dio().get(
         'https://nominatim.openstreetmap.org/search',
         queryParameters: {
@@ -129,6 +130,7 @@ class _MyMapPageState extends State<MyMapPage> {
           'limit': 5,
         },
       );
+      print(response);
 
       setState(() {
         _suggestions = response.data
@@ -345,22 +347,7 @@ class _MyMapPageState extends State<MyMapPage> {
                             title: Text(suggestion.displayName),
                             onTap: () => _onSuggestionTap(suggestion),
                           ),
-                          IconButton(
-                              onPressed: () => setState(() {
-                                    if (suggestion.favourited) {
-                                      suggestion.favourited = false;
-                                      _model!.deleteSuggestionByName(
-                                          suggestion.displayName,
-                                          table: "favourites");
-                                    } else {
-                                      suggestion.favourited = true;
-                                      _model!.insertSuggestion(suggestion,
-                                          table: "favourites");
-                                    }
-                                  }),
-                              icon: Icon(suggestion.favourited
-                                  ? Icons.favorite
-                                  : Icons.favorite_outline)),
+                          favouriteIcon(setState, _model, suggestion),
                         ]);
                       },
                     ),

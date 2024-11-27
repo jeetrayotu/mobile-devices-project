@@ -7,6 +7,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'notifications.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'; // Import for notifications
 
+Widget favouriteIcon(
+    Function setState, SuggestionModel? model, Suggestion suggestion) {
+  return IconButton(
+      onPressed: () => setState(() {
+            if (suggestion.favourited) {
+              suggestion.favourited = false;
+              model!.deleteSuggestionByName(suggestion.displayName,
+                  table: "favourites");
+            } else {
+              suggestion.favourited = true;
+              model!.insertSuggestion(suggestion, table: "favourites");
+            }
+          }),
+      icon: Icon(
+          suggestion.favourited ? Icons.favorite : Icons.favorite_outline));
+}
+
 class Suggestion {
   late String displayName;
   late LatLng coordinates;
@@ -150,8 +167,7 @@ class historyState extends State<History> {
   bool showSnackBar = false;
   Notifications notif = Notifications();
 
-  void initState()
-  {
+  void initState() {
     notif.init();
     super.initState();
   }
@@ -159,12 +175,12 @@ class historyState extends State<History> {
   historyState(this.model);
 
   Future<void> _deleteSuggestion(Suggestion suggestion) async {
-    notif.sendNotificationNow('Delete Suggestion', 'Suggestion Deleted', 'Delete');
+    notif.sendNotificationNow(
+        'Delete Suggestion', 'Suggestion Deleted', 'Delete');
 
     await model!.deleteSuggestionByName(suggestion.displayName);
     setState(() {});
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -199,17 +215,19 @@ class historyState extends State<History> {
                   return Center(
                       child: Padding(
                           padding: const EdgeInsets.all(70),
-                          child: IconButton(icon: const Icon(Icons.refresh),
-                            onPressed: (){
+                          child: IconButton(
+                            icon: const Icon(Icons.refresh),
+                            onPressed: () {
                               // Display message if no values are found
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('No suggestions found. Add them by searching for locations on the previous screen'),
-                                  action: SnackBarAction(label: 'Okay', onPressed: (){}),
-                                  )
-                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                    'No suggestions found. Add them by searching for locations on the previous screen'),
+                                action: SnackBarAction(
+                                    label: 'Okay', onPressed: () {}),
+                              ));
                             },
-                          )
-                      ));
+                          )));
                 }
 
                 return ListView.builder(
@@ -249,13 +267,18 @@ class historyState extends State<History> {
                         },
                         child: Card(
                             color: Colors.blue,
-                            child: ListTile(
-                              title: Text(suggestion.displayName,
-                                  style: const TextStyle(color: Colors.white)),
-                              subtitle: Text(
-                                  "Latitude: ${suggestion.coordinates.latitude} | Longitude: ${suggestion.coordinates.longitude}",
-                                  style: const TextStyle(color: Colors.white)),
-                            )));
+                            child: Row(children: <Widget>[
+                              ListTile(
+                                title: Text(suggestion.displayName,
+                                    style:
+                                        const TextStyle(color: Colors.white)),
+                                subtitle: Text(
+                                    "Latitude: ${suggestion.coordinates.latitude} | Longitude: ${suggestion.coordinates.longitude}",
+                                    style:
+                                        const TextStyle(color: Colors.white)),
+                              ),
+                              favouriteIcon(setState, model, suggestion)
+                            ])));
                   },
                 );
               },
