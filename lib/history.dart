@@ -11,6 +11,7 @@ class Suggestion {
   late String displayName;
   late LatLng coordinates;
   DocumentReference? reference;
+  bool favourited = false;
 
   Suggestion(this.displayName, this.coordinates, {this.reference});
 

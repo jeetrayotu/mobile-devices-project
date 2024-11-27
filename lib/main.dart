@@ -69,8 +69,7 @@ class _MyMapPageState extends State<MyMapPage> {
 
   Future<void> _initDatabase() async {
     var dbPath = await getDatabasesPath();
-    String path = join(
-        dbPath, 'suggestiondatabase.db');
+    String path = join(dbPath, 'suggestiondatabase.db');
 
     _model = SuggestionModel(await openDatabase(
       path,
@@ -79,7 +78,7 @@ class _MyMapPageState extends State<MyMapPage> {
         await db.execute(
             "CREATE TABLE history(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
         await db.execute(
-            "CREATE TABLE favorites(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
+            "CREATE TABLE favourites(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
       },
     ));
     // TODO
@@ -93,14 +92,15 @@ class _MyMapPageState extends State<MyMapPage> {
   _goToHistory(context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => History(title: "History", model: _model)),
+      MaterialPageRoute(
+          builder: (context) => History(title: "History", model: _model)),
     );
   }
 
   _goToFavourites(context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Favourites()),
+      MaterialPageRoute(builder: (context) => Favourites(title: "Favourites")),
     );
   }
 
@@ -131,7 +131,9 @@ class _MyMapPageState extends State<MyMapPage> {
       );
 
       setState(() {
-        _suggestions = response.data.map<Suggestion>((suggestion) => Suggestion.fromMap(suggestion)).toList();
+        _suggestions = response.data
+            .map<Suggestion>((suggestion) => Suggestion.fromMap(suggestion))
+            .toList();
       });
     } catch (e) {
       print('Error fetching suggestions: $e');
@@ -207,7 +209,8 @@ class _MyMapPageState extends State<MyMapPage> {
           print("No meetup coordinates in the response.");
         }
       } else {
-        print('Failed to load meetup coordinates: Error ${response.statusCode} with response ${response.body}');
+        print(
+            'Failed to load meetup coordinates: Error ${response.statusCode} with response ${response.body}');
       }
     } catch (e) {
       print('Error fetching meetup coordinates: $e');
@@ -290,7 +293,8 @@ class _MyMapPageState extends State<MyMapPage> {
               )),
           IconButton(
               onPressed: () async {
-                for (Suggestion suggestion in await _model!.getAllSuggestions()) {
+                for (Suggestion suggestion
+                    in await _model!.getAllSuggestions()) {
                   _model!.updateFireSuggestion(suggestion);
                 }
               },
@@ -300,7 +304,8 @@ class _MyMapPageState extends State<MyMapPage> {
               )),
           IconButton(
               onPressed: () async {
-                for (Suggestion suggestion in await _model!.getAllFireSuggestions()) {
+                for (Suggestion suggestion
+                    in await _model!.getAllFireSuggestions()) {
                   _model!.insertSuggestion(suggestion);
                 }
               },
@@ -335,10 +340,28 @@ class _MyMapPageState extends State<MyMapPage> {
                       itemCount: _suggestions.length,
                       itemBuilder: (context, index) {
                         final suggestion = _suggestions[index];
-                        return ListTile(
-                          title: Text(suggestion.displayName),
-                          onTap: () => _onSuggestionTap(suggestion),
-                        );
+                        return Row(children: <Widget>[
+                          ListTile(
+                            title: Text(suggestion.displayName),
+                            onTap: () => _onSuggestionTap(suggestion),
+                          ),
+                          IconButton(
+                              onPressed: () => setState(() {
+                                    if (suggestion.favourited) {
+                                      suggestion.favourited = false;
+                                      _model!.deleteSuggestionByName(
+                                          suggestion.displayName,
+                                          table: "favourites");
+                                    } else {
+                                      suggestion.favourited = true;
+                                      _model!.insertSuggestion(suggestion,
+                                          table: "favourites");
+                                    }
+                                  }),
+                              icon: Icon(suggestion.favourited
+                                  ? Icons.favorite
+                                  : Icons.favorite_outline)),
+                        ]);
                       },
                     ),
                   ),
