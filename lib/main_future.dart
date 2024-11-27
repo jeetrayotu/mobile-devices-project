@@ -79,12 +79,12 @@ class _MyMapPageState extends State<MyMapPage> {
         await db.execute(
             "CREATE TABLE history(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
         await db.execute(
-            "CREATE TABLE favorites(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
+            "CREATE TABLE favourites(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
       },
     ));
     // TODO
-    // for (Suggestion suggestion.dart in await _model!.getAllSuggestions(comparator: _comparator)) {
-    //   _model!.deleteSuggestionByName(suggestion.dart.displayName);
+    // for (Suggestion suggestion in await _model!.getAllSuggestions(comparator: _comparator)) {
+    //   _model!.deleteSuggestionByName(suggestion.displayName);
     // }
     setState(() {});
   }
