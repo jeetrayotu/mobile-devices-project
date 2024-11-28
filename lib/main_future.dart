@@ -13,7 +13,8 @@ import 'package:path/path.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'suggestion.dart';
+import 'favourites.dart';
 void main() async {
   // await dotenv.load(fileName: "key.env"); // Ensure dotenv is loaded
   WidgetsFlutterBinding.ensureInitialized();
@@ -99,7 +100,7 @@ class _MyMapPageState extends State<MyMapPage> {
   _goToFavourites(context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Favourites()),
+      MaterialPageRoute(builder: (context) => Favourites(title: "Favourites", model: _model)),
     );
   }
 
