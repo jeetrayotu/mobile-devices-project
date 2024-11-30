@@ -158,10 +158,26 @@ class historyState extends State<History> {
 
   historyState(this.model);
 
+  Future<void> _addSuggestionToFavorites(Suggestion suggestion) async {
+    try {
+      // Add to favorites table
+      await widget.model?.insertSuggestion(suggestion, table: 'favorites');
+
+      // Optionally show a confirmation message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Added "${suggestion.displayName}" to favorites')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error adding to favorites: $e')),
+      );
+    }
+  }
+
   Future<void> _deleteSuggestion(Suggestion suggestion) async {
     notif.sendNotificationNow('Delete Suggestion', 'Suggestion Deleted', 'Delete');
 
-    await model!.deleteSuggestionByName(suggestion.displayName);
+    await model!.deleteSuggestionByName(suggestion.displayName, table: 'history');
     setState(() {});
   }
 
@@ -222,7 +238,7 @@ class historyState extends State<History> {
                         background: const Row(children: <Widget>[
                           Padding(
                               padding: EdgeInsets.only(left: 12),
-                              child: Icon(Icons.edit, color: Colors.blue)),
+                              child: Icon(Icons.favorite, color: Colors.blue)),
                           Spacer(),
                         ]),
                         secondaryBackground: const Row(children: <Widget>[
@@ -240,10 +256,14 @@ class historyState extends State<History> {
                         // Answer: https://stackoverflow.com/a/64669848
                         // User: https://stackoverflow.com/users/8532605/unicornsonlsd
                         confirmDismiss: (direction) async {
-                          // Adapted From: https://www.dhiwise.com/post/how-to-implement-flutter-swipe-action-cell-in-mobile-app
-                          if (direction == DismissDirection.endToStart) {
+                          if (direction == DismissDirection.startToEnd) {
+                            // Swipe right to add to favorites
+                            await _addSuggestionToFavorites(suggestion);
+                            return false; // Prevent the dismiss from happening
+                          } else if (direction == DismissDirection.endToStart) {
+                            // Swipe left to delete from history
                             await _deleteSuggestion(suggestion);
-                            return true;
+                            return true; // Allow the dismiss (delete action)
                           }
                           return false;
                         },

@@ -80,9 +80,9 @@ class SuggestionModel {
               .toList();
 
           // Save external suggestions to history for future use
-          for (var suggestion in externalSuggestions) {
-            await insertSuggestion(suggestion);
-          }
+          // for (var suggestion in externalSuggestions) {
+          //   await insertSuggestion(suggestion);
+          // }
 
           return externalSuggestions;
         }
@@ -94,10 +94,10 @@ class SuggestionModel {
     return historySuggestions;
   }
 
-  Future<void> insertSuggestion(Suggestion suggestion) async {
+  Future<void> insertSuggestion(Suggestion suggestion, {String? table = 'history'}) async {
     try {
       await database.insert(
-        'history',
+        table!,
         suggestion.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -107,17 +107,17 @@ class SuggestionModel {
   }
 
   // Method to get all suggestions from history
-  Future<List<Suggestion>> getAllSuggestions() async {
-    final List<Map<String, dynamic>> results = await database.query('history');
+  Future<List<Suggestion>> getAllSuggestions({String? table = 'history'}) async {
+    final List<Map<String, dynamic>> results = await database.query(table!);
     return results.map((map) => Suggestion.fromMap(map)).toList();
   }
 
   // Method to delete a suggestion by name
-  Future<void> deleteSuggestionByName(String displayName) async {
+  Future<void> deleteSuggestionByName(String name, {String? table = "history"}) async {
     await database.delete(
-      'history',
-      where: 'displayName = ?',
-      whereArgs: [displayName],
+      table!,
+      where: "displayName = ?",
+      whereArgs: [name],
     );
   }
 
