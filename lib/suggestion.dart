@@ -11,6 +11,22 @@ class Suggestion {
 
   Suggestion(this.displayName, this.coordinates, {this.reference});
 
+  // Adapted From:
+  // Answer: https://stackoverflow.com/a/62867620
+  // User: https://stackoverflow.com/users/179715/jamesdlin
+  // And: https://dart.dev/tools/linter-rules/hash_and_equals
+  @override
+  bool operator ==(Object other) =>
+      other is Suggestion &&
+          other.coordinates == coordinates;
+
+  // Adapted From:
+  // Answer: https://stackoverflow.com/a/62867620
+  // User: https://stackoverflow.com/users/179715/jamesdlin
+  // And: https://dart.dev/tools/linter-rules/hash_and_equals
+  @override
+  int get hashCode => coordinates.hashCode;
+
   Suggestion.fromMap(Map<String, dynamic> map) {
     displayName = map['display_name'] ?? map['displayName'] ?? 'Unknown Location';
 
@@ -52,43 +68,43 @@ class SuggestionModel {
         .map((map) => Suggestion.fromMap(map))
         .toList();
 
-    // If local results are insufficient, fetch external suggestions
-    if (historySuggestions.isEmpty) {
-      try {
-        final dio = Dio();
-        final response = await dio.get(
-          'https://nominatim.openstreetmap.org/search',
-          queryParameters: {
-            'q': query,
-            'format': 'json',
-            'addressdetails': 1,
-            'limit': 5,
-          },
-        );
+    try {
+      final dio = Dio();
+      final response = await dio.get(
+        'https://nominatim.openstreetmap.org/search',
+        queryParameters: {
+          'q': query,
+          'format': 'json',
+          'addressdetails': 1,
+          'limit': 5,
+        },
+      );
 
-        if (response.data != null && response.data is List) {
-          final externalSuggestions = response.data
-              .where((dynamic suggestion) => suggestion is Map<String, dynamic>) // Filter valid maps
-              .map<Suggestion>((dynamic suggestion) {
-            try {
-              return Suggestion.fromMap(suggestion as Map<String, dynamic>);
-            } catch (e) {
-              print('Error parsing external suggestion: $e');
-              throw Exception('Invalid suggestion format');
-            }
-          })
-              .toList();
+      if (response.data != null && response.data is List) {
+        final externalSuggestions = response.data
+            .where((dynamic suggestion) => suggestion is Map<String, dynamic>) // Filter valid maps
+            .map<Suggestion>((dynamic suggestion) {
+          try {
+            return Suggestion.fromMap(suggestion);
+          } catch (e) {
+            print('Error parsing external suggestion: $e');
+            throw Exception('Invalid suggestion format');
+          }
+        })
+            .toList();
 
-          // Save external suggestions to history for future use
-          // for (var suggestion in externalSuggestions) {
-          //   await insertSuggestion(suggestion);
-          // }
+        // Save external suggestions to history for future use
+        // for (var suggestion in externalSuggestions) {
+        //   await insertSuggestion(suggestion);
+        // }
 
-          return externalSuggestions;
-        }
-      } catch (e) {
-        print('Error fetching external suggestions: $e');
+        // Adapted From:
+        // Answer: https://stackoverflow.com/a/51446910
+        // User: https://stackoverflow.com/users/1058292/atreeon
+        return Set<Suggestion>.from(historySuggestions + externalSuggestions).toList();
       }
+    } catch (e) {
+      print('Error fetching external suggestions: $e');
     }
 
     return historySuggestions;
