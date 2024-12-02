@@ -61,6 +61,7 @@ class _MyMapPageState extends State<MyMapPage> {
       _meetup; // Meetup spot halfway between destination and current location.
   List<LatLng> _routePoints = []; // Points for the polyline route
   SuggestionModel? _model;
+  List<String> tables = [];
 
   @override
   void initState() {
@@ -70,17 +71,17 @@ class _MyMapPageState extends State<MyMapPage> {
 
   Future<void> _initDatabase() async {
     var dbPath = await getDatabasesPath();
-    String path = join(
-        dbPath, 'suggestiondatabase.db');
+    String path = join(dbPath, 'suggestiondatabase.db');
 
     _model = SuggestionModel(await openDatabase(
       path,
       version: 1,
       onCreate: (db, version) async {
-        await db.execute(
-            "CREATE TABLE history(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
-        await db.execute(
-            "CREATE TABLE favorites(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
+        for (String name in ["history", "favourites"]) {
+          tables.add(name);
+          await db.execute(
+              "CREATE TABLE $name(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
+        }
       },
     ));
     // TODO
@@ -94,15 +95,19 @@ class _MyMapPageState extends State<MyMapPage> {
   _goToHistory(context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => History(title: "History", model: _model)),
+      MaterialPageRoute(
+          builder: (context) => History(title: "History", model: _model)),
     );
   }
 
   _goToFavourites(context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Favourites(title: 'My Favourites',
-        model: _model,)),
+      MaterialPageRoute(
+          builder: (context) => Favourites(
+                title: 'My Favourites',
+                model: _model,
+              )),
     );
   }
 
@@ -138,12 +143,12 @@ class _MyMapPageState extends State<MyMapPage> {
   Future<void> _onSuggestionTap(Suggestion suggestion) async {
     setState(() {
       _destination = suggestion.coordinates;
+      _meetup ??= calculateHalfwayPoint(_currentCenter, _destination);
       _suggestions = [];
       _searchController.clear();
     });
     _mapController.move(_destination!, 13.0);
     await _model!.insertSuggestion(suggestion);
-    await _fetchMeetup(); // Fetch the meetup location when a destination is selected
     await _fetchRoute(); // Fetch the route when a destination is selected
   }
 
@@ -196,15 +201,14 @@ class _MyMapPageState extends State<MyMapPage> {
           final coordinates =
               data['features'][0]['geometry']['coordinates'] as List;
 
-          setState(() {
-            _meetup = LatLng(coordinates[1], coordinates[0]);
-          });
+          _meetup = LatLng(coordinates[1], coordinates[0]);
           print("Meetup Coordinates: $_meetup"); // Debug print
         } else {
           print("No meetup coordinates in the response.");
         }
       } else {
-        print('Failed to load meetup coordinates: Error ${response.statusCode} with response ${response.body}');
+        print(
+            'Failed to load meetup coordinates: Error ${response.statusCode} with response ${response.body}');
       }
     } catch (e) {
       print('Error fetching meetup coordinates: $e');
@@ -212,7 +216,9 @@ class _MyMapPageState extends State<MyMapPage> {
   }
 
   Future<void> _fetchRoute() async {
-    if (_destination == null || _meetup == null) return;
+    await _fetchMeetup(); // Fetch the meetup location when a destination is selected
+
+    if (_destination == null) return;
 
     final routeUrl = Uri.parse(
       // 'https://api.openrouteservice.org/v2/directions/foot-walking?api_key=$_orsApiKey&start=${_currentCenter.longitude},${_currentCenter.latitude}&end=${_destination!.longitude},${_destination!.latitude}',
@@ -285,26 +291,6 @@ class _MyMapPageState extends State<MyMapPage> {
                 Icons.history,
                 color: Colors.white,
               )),
-          IconButton(
-              onPressed: () async {
-                for (Suggestion suggestion in await _model!.getAllSuggestions()) {
-                  _model!.updateFireSuggestion(suggestion);
-                }
-              },
-              icon: const Icon(
-                Icons.upload,
-                color: Colors.white,
-              )),
-          IconButton(
-              onPressed: () async {
-                for (Suggestion suggestion in await _model!.getAllFireSuggestions()) {
-                  _model!.insertSuggestion(suggestion);
-                }
-              },
-              icon: const Icon(
-                Icons.download,
-                color: Colors.white,
-              ))
         ],
       ),
       body: Column(
@@ -326,9 +312,18 @@ class _MyMapPageState extends State<MyMapPage> {
                   onChanged: _getSuggestions,
                 ),
                 if (_suggestions.isNotEmpty)
-                  Container(
-                    height: 150,
+                  ConstrainedBox(
+                    // Adapted From:
+                    // Answer: https://stackoverflow.com/a/65262751
+                    // User: https://stackoverflow.com/users/1032201/rstrelba
+                    // And: https://chatgpt.com/share/6701842a-83fc-8000-a0c9-daad905842ec
+                    constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height / 3.5),
                     child: ListView.builder(
+                      // Adapted From:
+                      // Answer: https://stackoverflow.com/a/69638759
+                      // User: https://stackoverflow.com/users/14728030/canada2000
+                      shrinkWrap: true,
                       itemCount: _suggestions.length,
                       itemBuilder: (context, index) {
                         final suggestion = _suggestions[index];
@@ -338,7 +333,7 @@ class _MyMapPageState extends State<MyMapPage> {
                         );
                       },
                     ),
-                  ),
+                  )
               ],
             ),
           ),

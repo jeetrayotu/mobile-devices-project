@@ -11,6 +11,22 @@ class Suggestion {
 
   Suggestion(this.displayName, this.coordinates, {this.reference});
 
+  // Adapted From:
+  // Answer: https://stackoverflow.com/a/62867620
+  // User: https://stackoverflow.com/users/179715/jamesdlin
+  // And: https://dart.dev/tools/linter-rules/hash_and_equals
+  @override
+  bool operator ==(Object other) =>
+      other is Suggestion &&
+          other.coordinates == coordinates;
+
+  // Adapted From:
+  // Answer: https://stackoverflow.com/a/62867620
+  // User: https://stackoverflow.com/users/179715/jamesdlin
+  // And: https://dart.dev/tools/linter-rules/hash_and_equals
+  @override
+  int get hashCode => coordinates.hashCode;
+
   Suggestion.fromMap(Map<String, dynamic> map) {
     displayName = map['display_name'] ?? map['displayName'] ?? 'Unknown Location';
 
@@ -52,93 +68,85 @@ class SuggestionModel {
         .map((map) => Suggestion.fromMap(map))
         .toList();
 
-    // If local results are insufficient, fetch external suggestions
-    if (historySuggestions.isEmpty) {
-      try {
-        final dio = Dio();
-        final response = await dio.get(
-          'https://nominatim.openstreetmap.org/search',
-          queryParameters: {
-            'q': query,
-            'format': 'json',
-            'addressdetails': 1,
-            'limit': 5,
-          },
-        );
+    try {
+      final dio = Dio();
+      final response = await dio.get(
+        'https://nominatim.openstreetmap.org/search',
+        queryParameters: {
+          'q': query,
+          'format': 'json',
+          'addressdetails': 1,
+          'limit': 5,
+        },
+      );
 
-        if (response.data != null && response.data is List) {
-          final externalSuggestions = response.data
-              .where((dynamic suggestion) => suggestion is Map<String, dynamic>) // Filter valid maps
-              .map<Suggestion>((dynamic suggestion) {
-            try {
-              return Suggestion.fromMap(suggestion as Map<String, dynamic>);
-            } catch (e) {
-              print('Error parsing external suggestion: $e');
-              throw Exception('Invalid suggestion format');
-            }
-          })
-              .toList();
+      if (response.data != null && response.data is List) {
+        final externalSuggestions = response.data
+            .where((dynamic suggestion) => suggestion is Map<String, dynamic>) // Filter valid maps
+            .map<Suggestion>((dynamic suggestion) {
+          try {
+            return Suggestion.fromMap(suggestion);
+          } catch (e) {
+            print('Error parsing external suggestion: $e');
+            throw Exception('Invalid suggestion format');
+          }
+        })
+            .toList();
 
-          // Save external suggestions to history for future use
-          // for (var suggestion in externalSuggestions) {
-          //   await insertSuggestion(suggestion);
-          // }
+        // Save external suggestions to history for future use
+        // for (var suggestion in externalSuggestions) {
+        //   await insertSuggestion(suggestion);
+        // }
 
-          return externalSuggestions;
-        }
-      } catch (e) {
-        print('Error fetching external suggestions: $e');
+        // Adapted From:
+        // Answer: https://stackoverflow.com/a/51446910
+        // User: https://stackoverflow.com/users/1058292/atreeon
+        return Set<Suggestion>.from(historySuggestions + externalSuggestions).toList();
       }
+    } catch (e) {
+      print('Error fetching external suggestions: $e');
     }
 
     return historySuggestions;
   }
 
-  Future<void> insertSuggestion(Suggestion suggestion, {String? table = 'history'}) async {
+  Future<void> insertSuggestion(Suggestion suggestion, {String table = 'history'}) async {
     try {
       await database.insert(
-        table!,
+        table,
         suggestion.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
+      await FirebaseFirestore.instance
+          .collection(table)
+          .doc(suggestion.displayName)
+          .set(suggestion.toMap());
     } catch (e) {
       print('Error inserting suggestion: $e');
     }
   }
 
   // Method to get all suggestions from history
-  Future<List<Suggestion>> getAllSuggestions({String? table = 'history'}) async {
-    final List<Map<String, dynamic>> results = await database.query(table!);
+  Future<List<Suggestion>> getAllSuggestions({String table = 'history'}) async {
+    final List<Map<String, dynamic>> results = await database.query(table);
     return results.map((map) => Suggestion.fromMap(map)).toList();
   }
 
   // Method to delete a suggestion by name
-  Future<void> deleteSuggestionByName(String name, {String? table = "history"}) async {
+  Future<void> deleteSuggestionByName(String name, {String table = "history"}) async {
     await database.delete(
-      table!,
+      table,
       where: "displayName = ?",
       whereArgs: [name],
     );
+    await FirebaseFirestore.instance.collection('grades').doc(name).delete();
   }
 
-  // Methods for handling Firebase suggestions (based on the upload/download icons in the main file)
-  Future<void> updateFireSuggestion(Suggestion suggestion) async {
-    // Implement Firebase update logic
-    try {
-      await FirebaseFirestore.instance
-          .collection('suggestions')
-          .doc(suggestion.displayName)
-          .set(suggestion.toMap());
-    } catch (e) {
-      print('Error updating Firebase suggestion: $e');
-    }
-  }
-
-  Future<List<Suggestion>> getAllFireSuggestions() async {
+  Future<List<Suggestion>> getAllFireSuggestions({String table = "history"}) async {
     // Implement Firebase fetch logic
     try {
       final querySnapshot = await FirebaseFirestore.instance
-          .collection('suggestions')
+          .collection(table)
           .get();
 
       return querySnapshot.docs

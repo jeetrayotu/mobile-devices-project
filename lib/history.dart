@@ -150,37 +150,38 @@ class historyState extends State<History> {
   bool showSnackBar = false;
   Notifications notif = Notifications();
 
-  void initState()
-  {
+  void initState() {
     notif.init();
     super.initState();
   }
 
   historyState(this.model);
 
-  Future<void> _addSuggestionToFavorites(Suggestion suggestion) async {
+  Future<void> _addSuggestionToFavourites(Suggestion suggestion) async {
     try {
-      // Add to favorites table
-      await widget.model?.insertSuggestion(suggestion, table: 'favorites');
+      // Add to favourites table
+      await widget.model?.insertSuggestion(suggestion, table: 'favourites');
 
       // Optionally show a confirmation message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Added "${suggestion.displayName}" to favorites')),
+        SnackBar(
+            content: Text('Added "${suggestion.displayName}" to favourites')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error adding to favorites: $e')),
+        SnackBar(content: Text('Error adding to favourites: $e')),
       );
     }
   }
 
   Future<void> _deleteSuggestion(Suggestion suggestion) async {
-    notif.sendNotificationNow('Delete Suggestion', 'Suggestion Deleted', 'Delete');
+    notif.sendNotificationNow(
+        'Delete Suggestion', 'Suggestion Deleted', 'Delete');
 
-    await model!.deleteSuggestionByName(suggestion.displayName, table: 'history');
+    await model!
+        .deleteSuggestionByName(suggestion.displayName, table: 'history');
     setState(() {});
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -212,20 +213,11 @@ class historyState extends State<History> {
                 }
 
                 if (snapshot.data!.isEmpty) {
-                  return Center(
+                  return const Center(
                       child: Padding(
-                          padding: const EdgeInsets.all(70),
-                          child: IconButton(icon: const Icon(Icons.refresh),
-                            onPressed: (){
-                              // Display message if no values are found
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('No suggestions found. Add them by searching for locations on the previous screen'),
-                                  action: SnackBarAction(label: 'Okay', onPressed: (){}),
-                                  )
-                              );
-                            },
-                          )
-                      ));
+                          padding: EdgeInsets.all(70),
+                          child: Text(
+                              'No suggestions found. Add them by searching for and selecting locations on the previous screen')));
                 }
 
                 return ListView.builder(
@@ -257,8 +249,8 @@ class historyState extends State<History> {
                         // User: https://stackoverflow.com/users/8532605/unicornsonlsd
                         confirmDismiss: (direction) async {
                           if (direction == DismissDirection.startToEnd) {
-                            // Swipe right to add to favorites
-                            await _addSuggestionToFavorites(suggestion);
+                            // Swipe right to add to favourites
+                            await _addSuggestionToFavourites(suggestion);
                             return false; // Prevent the dismiss from happening
                           } else if (direction == DismissDirection.endToStart) {
                             // Swipe left to delete from history
