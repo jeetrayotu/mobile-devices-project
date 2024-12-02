@@ -61,6 +61,7 @@ class _MyMapPageState extends State<MyMapPage> {
       _meetup; // Meetup spot halfway between destination and current location.
   List<LatLng> _routePoints = []; // Points for the polyline route
   SuggestionModel? _model;
+  List<String> tables = [];
 
   @override
   void initState() {
@@ -76,10 +77,11 @@ class _MyMapPageState extends State<MyMapPage> {
       path,
       version: 1,
       onCreate: (db, version) async {
-        await db.execute(
-            "CREATE TABLE history(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
-        await db.execute(
-            "CREATE TABLE favourites(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
+        for (String name in ["history", "favourites"]) {
+          tables.add(name);
+          await db.execute(
+              "CREATE TABLE $name(displayName TEXT PRIMARY KEY, latitude TEXT, longitude TEXT)");
+        }
       },
     ));
     // TODO
@@ -289,28 +291,6 @@ class _MyMapPageState extends State<MyMapPage> {
                 Icons.history,
                 color: Colors.white,
               )),
-          IconButton(
-              onPressed: () async {
-                for (Suggestion suggestion
-                    in await _model!.getAllSuggestions()) {
-                  _model!.updateFireSuggestion(suggestion);
-                }
-              },
-              icon: const Icon(
-                Icons.upload,
-                color: Colors.white,
-              )),
-          IconButton(
-              onPressed: () async {
-                for (Suggestion suggestion
-                    in await _model!.getAllFireSuggestions()) {
-                  _model!.insertSuggestion(suggestion);
-                }
-              },
-              icon: const Icon(
-                Icons.download,
-                color: Colors.white,
-              ))
         ],
       ),
       body: Column(
@@ -337,7 +317,8 @@ class _MyMapPageState extends State<MyMapPage> {
                     // Answer: https://stackoverflow.com/a/65262751
                     // User: https://stackoverflow.com/users/1032201/rstrelba
                     // And: https://chatgpt.com/share/6701842a-83fc-8000-a0c9-daad905842ec
-                    constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height - 457),
+                    constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height / 3.5),
                     child: ListView.builder(
                       // Adapted From:
                       // Answer: https://stackoverflow.com/a/69638759

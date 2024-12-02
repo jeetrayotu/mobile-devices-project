@@ -110,51 +110,43 @@ class SuggestionModel {
     return historySuggestions;
   }
 
-  Future<void> insertSuggestion(Suggestion suggestion, {String? table = 'history'}) async {
+  Future<void> insertSuggestion(Suggestion suggestion, {String table = 'history'}) async {
     try {
       await database.insert(
-        table!,
+        table,
         suggestion.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
+      await FirebaseFirestore.instance
+          .collection(table)
+          .doc(suggestion.displayName)
+          .set(suggestion.toMap());
     } catch (e) {
       print('Error inserting suggestion: $e');
     }
   }
 
   // Method to get all suggestions from history
-  Future<List<Suggestion>> getAllSuggestions({String? table = 'history'}) async {
-    final List<Map<String, dynamic>> results = await database.query(table!);
+  Future<List<Suggestion>> getAllSuggestions({String table = 'history'}) async {
+    final List<Map<String, dynamic>> results = await database.query(table);
     return results.map((map) => Suggestion.fromMap(map)).toList();
   }
 
   // Method to delete a suggestion by name
-  Future<void> deleteSuggestionByName(String name, {String? table = "history"}) async {
+  Future<void> deleteSuggestionByName(String name, {String table = "history"}) async {
     await database.delete(
-      table!,
+      table,
       where: "displayName = ?",
       whereArgs: [name],
     );
+    await FirebaseFirestore.instance.collection('grades').doc(name).delete();
   }
 
-  // Methods for handling Firebase suggestions (based on the upload/download icons in the main file)
-  Future<void> updateFireSuggestion(Suggestion suggestion) async {
-    // Implement Firebase update logic
-    try {
-      await FirebaseFirestore.instance
-          .collection('suggestions')
-          .doc(suggestion.displayName)
-          .set(suggestion.toMap());
-    } catch (e) {
-      print('Error updating Firebase suggestion: $e');
-    }
-  }
-
-  Future<List<Suggestion>> getAllFireSuggestions() async {
+  Future<List<Suggestion>> getAllFireSuggestions({String table = "history"}) async {
     // Implement Firebase fetch logic
     try {
       final querySnapshot = await FirebaseFirestore.instance
-          .collection('suggestions')
+          .collection(table)
           .get();
 
       return querySnapshot.docs
