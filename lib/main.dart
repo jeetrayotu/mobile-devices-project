@@ -13,6 +13,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
@@ -116,6 +117,76 @@ class _MyMapPageState extends State<MyMapPage> {
         await showDialog(context: context, builder: (context) => showPopup());
 
     return results;
+  }
+  //sadly can't get images through geocoding, only option would be to switch to google's API
+  //depricated
+  Future<void> _fetchLocationDetails(LatLng halfway)async {
+    try {
+      //geocoding to get basic location information
+      List<Placemark> pm =await placemarkFromCoordinates(
+        halfway.latitude,
+        halfway.longitude,
+      );
+      //DEBUG
+      if (pm.isNotEmpty) {
+        Placemark place = pm.first;
+        print("Location Details:");
+        print("Name: ${place.name}");
+        print("Address: ${place.street}, ${place.locality}, ${place.country}");
+      }
+
+      //get the detailed information
+      final dio = Dio();
+      final apiUrl = "https://nominatim.openstreetmap.org/reverse";
+      final response = await dio.get(apiUrl, queryParameters: {
+        "lat": halfway.latitude,
+        "lon": halfway.longitude,
+        "format": "json"
+      });
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        print("Detailed Location Data: ${data['display_name']}");
+        if (data['extratags'] != null && data['extratags']['website'] != null) {
+          print("Website: ${data['extratags']['website']}");
+        }
+      }
+    } catch (e) {
+      print("Error fetching location details: $e");
+    }
+  }
+  //debug function, ignore, we use a page now
+  Future<void> showHalfwayDetails(BuildContext context) async {
+    if (_meetup != null) {
+      await _fetchLocationDetails(_meetup!);
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('midpoint location Details'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Latitude: ${_meetup!.latitude}"),
+                Text("Longitude: ${_meetup!.longitude}"),
+                // in case you want to add anything, add it here
+                //no need, its just a debug method now
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    else {
+      print("No halfway point calculated yet.");
+    }
   }
 
   Future<void> _getSuggestions(String input) async {
@@ -271,27 +342,42 @@ class _MyMapPageState extends State<MyMapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Meet Me There'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                _goToFavourites(context);
-              },
-              icon: const Icon(
-                Icons.favorite,
-                color: Colors.white,
-              )),
-          IconButton(
-              onPressed: () {
-                _goToHistory(context);
-              },
-              icon: const Icon(
-                Icons.history,
-                color: Colors.white,
-              )),
-        ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.cyanAccent, Colors.blueAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: AppBar(
+            title: Text('Meet Me There'),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  _goToFavourites(context);
+                },
+                icon: const Icon(
+                  Icons.favorite,
+                  color: Colors.black,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  _goToHistory(context);
+                },
+                icon: const Icon(
+                  Icons.history,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -400,6 +486,76 @@ class _MyMapPageState extends State<MyMapPage> {
           ),
         ],
       ),
+      floatingActionButton: GestureDetector(
+        onLongPress: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("This button displays the meetup location"),
+              duration: Duration(seconds: 2),//can't use floats here
+            ),
+          );
+        },
+        child: FloatingActionButton(
+          onPressed: () async {
+            if (_meetup != null) {
+              try {
+                List<Placemark> placemarks = await placemarkFromCoordinates(
+                  _meetup!.latitude,
+                  _meetup!.longitude,
+                );
+
+                String name = placemarks.first.name!;
+                String address = '${placemarks.first.street}, ${placemarks.first.locality}, ${placemarks.first.country}';
+                // Navigate to the details page
+                Navigator.push(context,
+                  MaterialPageRoute(
+                    builder: (context) => LocationDetailsPage(
+                      name: name,
+                      address: address,
+                      coordinates: _meetup!,
+                    ),
+                  ),
+                );
+              } catch (e) {
+                print("$e");
+              }
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Input a search destination first."),
+                ),
+              );
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.cyanAccent, Colors.blueAccent],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blue,
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Icon(
+                Icons.place,
+                size: 30,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ),
+      ),
+
+
+
     );
   }
 }
@@ -408,6 +564,88 @@ class showPopup extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => showPopupState();
 }
+
+//so we have a page here that will show the midpoint, works with FAB
+class LocationDetailsPage extends StatelessWidget {
+  final String name;
+  final String address;
+  final LatLng coordinates;
+
+  LocationDetailsPage({
+    required this.name,
+    required this.address,
+    required this.coordinates,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.cyanAccent, Colors.blueAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: AppBar(
+            title: Text('Midpoint'),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+        ),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Card(
+            color: Colors.blue,
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Name/Building Number',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                  Text(
+                    '-> $name',
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Address: $address',
+                    style: TextStyle(fontSize: 18, color: Colors.black87),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Latitude: ${coordinates.latitude}',
+                    style: TextStyle(fontSize: 18, color: Colors.black87),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Longitude: ${coordinates.longitude}',
+                    style: TextStyle(fontSize: 18, color: Colors.black87),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 
 class showPopupState extends State<showPopup> {
   Widget build(BuildContext context) {

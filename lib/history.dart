@@ -187,11 +187,23 @@ class historyState extends State<History> {
   Widget build(BuildContext context) {
     return Scaffold(
       // Scaffold provides the overall structure for the screen with an AppBar and body
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-            style: const TextStyle(color: Colors.white),
-            widget.title), // The title shown in the app's top bar
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.cyanAccent, Colors.blueAccent],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
+          title: Text(
+            widget.title,
+            style: const TextStyle(color: Colors.black),// The title shown in the app's top bar
+          ),
+        ),
       ),
       // Adapted From: https://chatgpt.com/share/671e8456-8e90-8000-b9de-afb2cd0d21a4
       // And:
