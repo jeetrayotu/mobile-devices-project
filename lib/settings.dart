@@ -37,24 +37,24 @@ class _SettingsPageState extends State<SettingsPage> {
             Row(
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    FlutterI18n.refresh(context, Locale('en'));
+                  onPressed: () async {
+                    await FlutterI18n.refresh(context, Locale('en'));
                     setState(() {});  // Force the page to rebuild to reflect language change
                   },
                   child: Text(FlutterI18n.translate(context, "settings.languages.english")),
                 ),
                 SizedBox(width: 15),
                 ElevatedButton(
-                  onPressed: () {
-                    FlutterI18n.refresh(context, Locale('ru'));
+                  onPressed: () async {
+                    await FlutterI18n.refresh(context, Locale('ru'));
                     setState(() {});  // Force the page to rebuild to reflect language change
                   },
                   child: Text(FlutterI18n.translate(context, "settings.languages.russian")),
                 ),
                 SizedBox(width: 15),
                 ElevatedButton(
-                  onPressed: () {
-                    FlutterI18n.refresh(context, Locale('hi'));
+                  onPressed: () async {
+                    await FlutterI18n.refresh(context, Locale('hi'));
                     setState(() {});  // Force the page to rebuild to reflect language change
                   },
                   child: Text(FlutterI18n.translate(context, "settings.languages.hindi")),

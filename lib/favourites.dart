@@ -36,7 +36,7 @@ class _FavouritesState extends State<Favourites> {
       );
 
       await model?.deleteSuggestionByName(suggestion.displayName,
-          table: "favorites");
+          table: "favourites");
       setState(() {});
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -72,7 +72,7 @@ class _FavouritesState extends State<Favourites> {
           ? const Center(child: CircularProgressIndicator())
           : FutureBuilder<List<Suggestion>>(
               // future: model!.getAllSuggestions(),
-              future: model!.getAllSuggestions(table: "favorites"),
+              future: model!.getAllSuggestions(table: "favourites"),
               builder: (BuildContext context,
                   AsyncSnapshot<List<Suggestion>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {

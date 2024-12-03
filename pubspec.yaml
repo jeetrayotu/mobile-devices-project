@@ -51,7 +51,7 @@ dependencies:
   firebase_core:
   cloud_firestore:
   flutter_localizations:
-      sdk: flutter
+    sdk: flutter
   intl: any
 
 dev_dependencies:

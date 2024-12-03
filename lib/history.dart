@@ -161,7 +161,7 @@ class historyState extends State<History> {
   Future<void> _addSuggestionToFavourites(Suggestion suggestion) async {
     try {
       // Add to favourites table
-      await widget.model?.insertSuggestion(suggestion, table: 'favorites');
+      await widget.model?.insertSuggestion(suggestion, table: 'favourites');
 
       // Optionally show a confirmation message
       ScaffoldMessenger.of(context).showSnackBar(

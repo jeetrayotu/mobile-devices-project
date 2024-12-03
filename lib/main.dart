@@ -141,6 +141,7 @@ class _MyMapPageState extends State<MyMapPage> {
           builder: (context) => SettingsPage()
       ),
     );
+    setState(() {});
   }
 
   showOptions(BuildContext context) async {
@@ -149,8 +150,8 @@ class _MyMapPageState extends State<MyMapPage> {
 
     return results;
   }
-  //sadly can't get images through geocoding, only option would be to switch to google's API
-  //depricated
+  // Sadly can't get images through geocoding, only option would be to switch to google's API
+  // deprecated
   Future<void> _fetchLocationDetails(LatLng halfway)async {
     try {
       //geocoding to get basic location information
@@ -374,9 +375,9 @@ class _MyMapPageState extends State<MyMapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Colors.cyanAccent, Colors.blueAccent],
               begin: Alignment.topLeft,
