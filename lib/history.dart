@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -160,16 +161,19 @@ class historyState extends State<History> {
   Future<void> _addSuggestionToFavourites(Suggestion suggestion) async {
     try {
       // Add to favourites table
-      await widget.model?.insertSuggestion(suggestion, table: 'favourites');
+      await widget.model?.insertSuggestion(suggestion, table: 'favorites');
 
       // Optionally show a confirmation message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('Added "${suggestion.displayName}" to favourites')),
+            content: Text(
+              '${FlutterI18n.translate(context, "message.added")} "${suggestion.displayName}" ${FlutterI18n.translate(context, "message.toFavourites")}',
+            )
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error adding to favourites: $e')),
+        SnackBar(content: Text('${FlutterI18n.translate(context, "message.addingToFavourites")}: $e')),
       );
     }
   }
@@ -185,9 +189,9 @@ class historyState extends State<History> {
     String locationName = _getShortLocationName(suggestion.displayName);
 
     notif.sendNotificationNow(
-      'Delete Suggestion',
-      'Suggestion "$locationName" has been deleted',
-      'Delete',
+      FlutterI18n.translate(context, "notification.locationDeleted"),
+      '${locationName} ${FlutterI18n.translate(context, "notification.deletedFromHistory")}',
+      FlutterI18n.translate(context, "notification.delete"),
     );
 
     await model!.deleteSuggestionByName(
@@ -214,7 +218,7 @@ class historyState extends State<History> {
             ),
           ),
           title: Text(
-            widget.title,
+            FlutterI18n.translate(context, "history.title"),
             style: const TextStyle(color: Colors.black),// The title shown in the app's top bar
           ),
         ),
@@ -239,11 +243,10 @@ class historyState extends State<History> {
                 }
 
                 if (snapshot.data!.isEmpty) {
-                  return const Center(
+                  return Center(
                       child: Padding(
                           padding: EdgeInsets.all(70),
-                          child: Text(
-                              'No suggestions found. Add them by searching for and selecting locations on the previous screen')));
+                          child: Text(FlutterI18n.translate(context, "history.empty"))));
                 }
 
                 return ListView.builder(
@@ -291,7 +294,7 @@ class historyState extends State<History> {
                               title: Text(suggestion.displayName,
                                   style: const TextStyle(color: Colors.white)),
                               subtitle: Text(
-                                  "Latitude: ${suggestion.coordinates.latitude} | Longitude: ${suggestion.coordinates.longitude}",
+                                  "${FlutterI18n.translate(context, "coordinates.latitude")}: ${suggestion.coordinates.latitude} | ${FlutterI18n.translate(context, "coordinates.longitude")}: ${suggestion.coordinates.longitude}",
                                   style: const TextStyle(color: Colors.white)),
                             )));
                   },

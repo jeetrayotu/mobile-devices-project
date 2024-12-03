@@ -1,0 +1,61 @@
+{
+  "main": {
+    "title": "Meet Me There",
+    "search": "Search Destination",
+    "dialog": "Midpoint Location Details",
+    "inputSearch": "Input a search destination first"
+  },
+  "midpoint": {
+    "title": "Midpoint",
+    "name": "Name/Building Number",
+    "address": "Address"
+  },
+  "savedLocations": {
+    "title": "Saved Locations",
+    "description": "SHOWS DATABASE OF SAVED LOCATIONS FOR SELECTION"
+  },
+  "settings": {
+    "language": "Select a Language",
+    "title": "Settings",
+    "languages": {
+      "english": "English",
+      "hindi": "Hindi",
+      "russian": "Russian"
+    },
+    "theme": "Select a Theme",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "history": {
+    "title": "History",
+    "empty": "No history found. Add them by searching for and selecting locations on the previous screen"
+  },
+  "favourites": {
+    "title": "Favourites",
+    "noFavourites": "No favourites found. Add them by swiping right on a location on the history page.",
+    "haha": "Haha, ",
+    "nope": "nope!"
+  },
+  "suggestions": {
+    "no_suggestions": "No suggestions found. Add them by searching for locations on the previous screen"
+  },
+  "coordinates": {
+    "latitude": "Latitude",
+    "longitude": "Longitude"
+  },
+  "notification": {
+    "locationDeleted": "Location Deleted",
+    "deletedFromHistory": "has been deleted from history",
+    "deletedFromFavourites": "has been deleted from favourites",
+    "delete": "Delete"
+  },
+  "message": {
+    "added": "Added",
+    "toFavourites": "to Favourites",
+    "addingToFavourites": "Error adding to favourites",
+    "deletingFavourite": "Error deleted from favourites",
+    "loadingFavourites": "Error loading Favourites",
+    "close": "Close",
+    "displayLocation": "This button displays the meetup location"
+  }
+}

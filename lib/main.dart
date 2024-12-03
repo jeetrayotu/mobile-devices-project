@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geocoding/geocoding.dart';
@@ -15,6 +16,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'settings.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 void main() async {
   // await dotenv.load(fileName: "key.env"); // Ensure dotenv is loaded
@@ -30,6 +33,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Map Example',
+      localizationsDelegates: [
+        FlutterI18nDelegate(
+          translationLoader: FileTranslationLoader(
+            basePath: 'assets/i18n',
+            useCountryCode: false,
+            fallbackFile: 'ru', // Default language if the locale is not found
+          ),
+        ),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en'),
+        Locale('ru'),
+        Locale('hi')
+      ],
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -48,6 +67,7 @@ class MyMapPage extends StatefulWidget {
 }
 
 class _MyMapPageState extends State<MyMapPage> {
+
   final MapController _mapController = MapController();
   final TextEditingController _searchController = TextEditingController();
   List<Suggestion> _suggestions = [];
@@ -93,22 +113,33 @@ class _MyMapPageState extends State<MyMapPage> {
     setState(() {});
   }
 
-  _goToHistory(context) async {
-    final result = await Navigator.push(
+  _goToHistory(BuildContext context) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => History(title: "History", model: _model)),
+          builder: (context) => History(title: "History", model: _model)
+      ),
     );
   }
 
-  _goToFavourites(context) async {
-    final result = await Navigator.push(
+  _goToFavourites(BuildContext context) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => Favourites(
             title: 'My Favourites',
             model: _model,
-          )),
+          )
+      ),
+    );
+  }
+
+  _goToSettings(BuildContext context) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => SettingsPage()
+      ),
     );
   }
 
@@ -164,12 +195,12 @@ class _MyMapPageState extends State<MyMapPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('midpoint location Details'),
+            title: Text(FlutterI18n.translate(context, "main.dialog")),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("Latitude: ${_meetup!.latitude}"),
-                Text("Longitude: ${_meetup!.longitude}"),
+                Text("${FlutterI18n.translate(context, "coordinates.latitude")}: ${_meetup!.latitude}"),
+                Text("${FlutterI18n.translate(context, "coordinates.longitude")}: ${_meetup!.longitude}"),
                 // in case you want to add anything, add it here
                 //no need, its just a debug method now
               ],
@@ -177,7 +208,7 @@ class _MyMapPageState extends State<MyMapPage> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text('Close'),
+                child: Text(FlutterI18n.translate(context, "message.close")),
               ),
             ],
           );
@@ -353,7 +384,7 @@ class _MyMapPageState extends State<MyMapPage> {
             ),
           ),
           child: AppBar(
-            title: Text('Meet Me There'),
+            title: Text(FlutterI18n.translate(context, "main.title")),
             backgroundColor: Colors.transparent,
             elevation: 0,
             actions: [
@@ -375,6 +406,15 @@ class _MyMapPageState extends State<MyMapPage> {
                   color: Colors.black,
                 ),
               ),
+              IconButton(
+                onPressed: () {
+                  _goToSettings(context);
+                },
+                icon: const Icon(
+                  Icons.settings,
+                  color: Colors.black,
+                ),
+              )
             ],
           ),
         ),
@@ -388,7 +428,7 @@ class _MyMapPageState extends State<MyMapPage> {
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                      hintText: "Search destination",
+                      hintText: FlutterI18n.translate(context, "main.search"),
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
                           onPressed: () {
@@ -427,8 +467,8 @@ class _MyMapPageState extends State<MyMapPage> {
             child: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
-                center: _currentCenter,
-                zoom: 13.0,
+                initialCenter: _currentCenter,
+                initialZoom: 13.0,
               ),
               children: [
                 TileLayer(
@@ -442,7 +482,7 @@ class _MyMapPageState extends State<MyMapPage> {
                       width: 80.0,
                       height: 80.0,
                       point: _currentCenter,
-                      builder: (ctx) => const Icon(
+                      child: const Icon(
                         Icons.my_location,
                         color: Colors.blue,
                         size: 40.0,
@@ -453,7 +493,7 @@ class _MyMapPageState extends State<MyMapPage> {
                         width: 80.0,
                         height: 80.0,
                         point: _destination!,
-                        builder: (ctx) => const Icon(
+                        child: const Icon(
                           Icons.location_pin,
                           color: Colors.red,
                           size: 40.0,
@@ -464,7 +504,7 @@ class _MyMapPageState extends State<MyMapPage> {
                         width: 80.0,
                         height: 80.0,
                         point: _meetup!,
-                        builder: (ctx) => const Icon(
+                        child: const Icon(
                           Icons.location_pin,
                           color: Colors.green,
                           size: 40.0,
@@ -490,7 +530,7 @@ class _MyMapPageState extends State<MyMapPage> {
         onLongPress: () {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("This button displays the meetup location"),
+              content: Text(FlutterI18n.translate(context, "message.displayLocation")),
               duration: Duration(seconds: 2),//can't use floats here
             ),
           );
@@ -522,20 +562,20 @@ class _MyMapPageState extends State<MyMapPage> {
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text("Input a search destination first."),
+                  content: Text(FlutterI18n.translate(context, "main.inputSearch")),
                 ),
               );
             }
           },
           child: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [Colors.cyanAccent, Colors.blueAccent],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(12),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.blue,
                   blurRadius: 8,
@@ -543,7 +583,7 @@ class _MyMapPageState extends State<MyMapPage> {
                 ),
               ],
             ),
-            child: Center(
+            child: const Center(
               child: Icon(
                 Icons.place,
                 size: 30,
@@ -583,7 +623,7 @@ class LocationDetailsPage extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [Colors.cyanAccent, Colors.blueAccent],
               begin: Alignment.topLeft,
@@ -591,7 +631,7 @@ class LocationDetailsPage extends StatelessWidget {
             ),
           ),
           child: AppBar(
-            title: Text('Midpoint'),
+            title: Text(FlutterI18n.translate(context, "midpoint.title")),
             backgroundColor: Colors.transparent,
             elevation: 0,
           ),
@@ -613,7 +653,7 @@ class LocationDetailsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Name/Building Number',
+                    FlutterI18n.translate(context, "midpoint.name"),
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87),
                   ),
                   Text(
@@ -622,17 +662,17 @@ class LocationDetailsPage extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Address: $address',
+                    '${FlutterI18n.translate(context, "midpoint.address")}: $address',
                     style: TextStyle(fontSize: 18, color: Colors.black87),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Latitude: ${coordinates.latitude}',
+                    '${FlutterI18n.translate(context, "coordinates.latitude")}: ${coordinates.latitude}',
                     style: TextStyle(fontSize: 18, color: Colors.black87),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Longitude: ${coordinates.longitude}',
+                    '${FlutterI18n.translate(context, "coordinates.longitude")}: ${coordinates.longitude}',
                     style: TextStyle(fontSize: 18, color: Colors.black87),
                   ),
                 ],
@@ -650,10 +690,10 @@ class LocationDetailsPage extends StatelessWidget {
 class showPopupState extends State<showPopup> {
   Widget build(BuildContext context) {
     return SimpleDialog(
-      title: Text('Saved Locations'),
+      title: Text(FlutterI18n.translate(context, "savedLocations.title")),
       children: [
         SimpleDialogOption(
-          child: const Text('SHOWS DATABASE OF SAVED LOCATIONS FOR SELECTION'),
+          child: Text(FlutterI18n.translate(context, "savedLocations.description")),
           onPressed: () {
             Navigator.pop(
                 context, 'WORD'); // Closes the dialog and returns true

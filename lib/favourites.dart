@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'history.dart';
 import 'notifications.dart';
 import 'suggestion.dart';
@@ -29,17 +30,19 @@ class _FavouritesState extends State<Favourites> {
   Future<void> _deleteSuggestion(Suggestion suggestion) async {
     try {
       notif.sendNotificationNow(
-        'Delete Suggestion',
-        'Suggestion "${suggestion.displayName}" has been deleted',
-        'Delete',
+        FlutterI18n.translate(context, "notification.locationDeleted"),
+        '${suggestion.displayName} ${FlutterI18n.translate(context, "notification.deletedFromFavourites")}',
+        FlutterI18n.translate(context, "notification.delete"),
       );
 
       await model?.deleteSuggestionByName(suggestion.displayName,
-          table: "favourites");
+          table: "favorites");
       setState(() {});
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error deleting suggestion: $e')),
+        SnackBar(content: Text(
+          '${FlutterI18n.translate(context, "message.deletingFavourite")}: $e',
+        ),),
       );
     }
   }
@@ -60,7 +63,7 @@ class _FavouritesState extends State<Favourites> {
             ),
           ),
           title: Text(
-            widget.title,
+            FlutterI18n.translate(context, "favourites.title"),
             style: const TextStyle(color: Colors.black),
           ),
         ),
@@ -69,7 +72,7 @@ class _FavouritesState extends State<Favourites> {
           ? const Center(child: CircularProgressIndicator())
           : FutureBuilder<List<Suggestion>>(
               // future: model!.getAllSuggestions(),
-              future: model!.getAllSuggestions(table: "favourites"),
+              future: model!.getAllSuggestions(table: "favorites"),
               builder: (BuildContext context,
                   AsyncSnapshot<List<Suggestion>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -79,19 +82,18 @@ class _FavouritesState extends State<Favourites> {
                 if (snapshot.hasError) {
                   return Center(
                     child: Text(
-                      'Error loading favourites: ${snapshot.error}',
+                      '${FlutterI18n.translate(context, "message.loadingFavourites")}: ${snapshot.error}',
                       style: const TextStyle(color: Colors.red),
                     ),
                   );
                 }
 
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
-                      child: Text(
-                          'No favourites found. Add them by swiping right on a location on the history page.'),
-                    ),
+                      child: Text(FlutterI18n.translate(context, "favourites.noFavourites")),
+                    )
                   );
                 }
 
@@ -102,29 +104,29 @@ class _FavouritesState extends State<Favourites> {
                     return Dismissible(
                         key: Key(suggestion.displayName),
                         // Adapted From: https://www.dhiwise.com/post/how-to-implement-flutter-swipe-action-cell-in-mobile-app
-                        background: const Row(children: <Widget>[
+                        background: Row(children: <Widget>[
                           Padding(
                               padding: EdgeInsets.only(left: 12),
                               // child: Icon(Icons.favorite, color: Colors.deepPurpleAccent),
                               child: Row(children: <Widget>[
                                 Text(
-                                  "Haha, ",
+                                  FlutterI18n.translate(context, "favourites.haha"),
                                   // Adapted From:
                                   // Answer: https://stackoverflow.com/a/41557140
                                   // User: https://stackoverflow.com/users/1630961/dvdwasibi
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
                                       color: Colors.deepPurpleAccent),
                                 ),
                                 Text(
-                                  "nope!",
+                                  FlutterI18n.translate(context, "favourites.nope"),
                                   // Adapted From:
                                   // Answer 1: https://stackoverflow.com/a/69172018
                                   // User 1: https://stackoverflow.com/users/16252358/tushar-patel
                                   // Answer 2: https://stackoverflow.com/a/41557140
                                   // User 2: https://stackoverflow.com/users/1630961/dvdwasibi
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontStyle: FontStyle.italic,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
@@ -161,7 +163,7 @@ class _FavouritesState extends State<Favourites> {
                               title: Text(suggestion.displayName,
                                   style: const TextStyle(color: Colors.white)),
                               subtitle: Text(
-                                  "Latitude: ${suggestion.coordinates.latitude} | Longitude: ${suggestion.coordinates.longitude}",
+                                  "${FlutterI18n.translate(context, "coordinates.latitude")}: ${suggestion.coordinates.latitude} | ${FlutterI18n.translate(context, "coordinates.longitude")}: ${suggestion.coordinates.longitude}",
                                   style: const TextStyle(color: Colors.white)),
                             )));
                   },

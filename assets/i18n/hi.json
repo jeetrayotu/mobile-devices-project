@@ -1,0 +1,61 @@
+{
+  "main": {
+    "title": "मुझसे वहाँ मिलो",
+    "search": "गंतव्य खोजें",
+    "dialog": "मध्य बिंदु स्थान विवरण",
+    "inputSearch": "पहले गंतव्य खोजें"
+  },
+  "midpoint": {
+    "title": "मध्य बिंदु",
+    "name": "नाम/इमारत संख्या",
+    "address": "पता"
+  },
+  "savedLocations": {
+    "title": "सहेजे गए स्थान",
+    "description": "चयन के लिए सहेजे गए स्थानों का डेटाबेस दिखाता है"
+  },
+  "settings": {
+    "language": "भाषा चुनें",
+    "title": "सेटिंग्स",
+    "languages": {
+      "english": "अंग्रेजी",
+      "hindi": "हिंदी",
+      "russian": "रूसी"
+    },
+    "theme": "थीम चुनें",
+    "light": "हल्का",
+    "dark": "अंधेरा"
+  },
+  "history": {
+    "title": "इतिहास",
+    "empty": "कोई इतिहास नहीं मिला। उन्हें पिछले स्क्रीन पर स्थान खोजने और चयन करने से जोड़ें"
+  },
+  "favourites": {
+    "title": "पसंदीदा",
+    "noFavourites": "कोई पसंदीदा नहीं मिला। उन्हें इतिहास पृष्ठ पर एक स्थान को दाएं स्वाइप करके जोड़ें।",
+    "haha": "हा-हा, ",
+    "nope": "नहीं!"
+  },
+  "suggestions": {
+    "no_suggestions": "कोई सुझाव नहीं मिला। उन्हें पिछले स्क्रीन पर स्थान खोजने से जोड़ें"
+  },
+  "coordinates": {
+    "latitude": "अक्षांश",
+    "longitude": "देशांतर"
+  },
+  "notification": {
+    "locationDeleted": "स्थान हटाया गया",
+    "deletedFromHistory": "इतिहास से हटा दिया गया",
+    "deletedFromFavourites": "पसंदीदा से हटा दिया गया",
+    "delete": "हटाएं"
+  },
+  "message": {
+    "added": "जोड़ा गया",
+    "toFavourites": "पसंदीदा में",
+    "addingToFavourites": "पसंदीदा में जोड़ने में त्रुटि",
+    "deletingFavourite": "पसंदीदा से हटाने में त्रुटि",
+    "loadingFavourites": "पसंदीदा लोड करने में त्रुटि",
+    "close": "बंद करें",
+    "displayLocation": "यह बटन मिलने का स्थान दिखाता है"
+  }
+}
