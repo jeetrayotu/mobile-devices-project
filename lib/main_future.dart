@@ -386,16 +386,16 @@ class _MyMapPageState extends State<MyMapPage> {
                 Icons.history,
                 color: Colors.white,
               )),
-          IconButton(
-              onPressed: () async {
-                for (Suggestion suggestion in await _model!.getAllSuggestions()) {
-                  _model!.updateFireSuggestion(suggestion);
-                }
-              },
-              icon: const Icon(
-                Icons.upload,
-                color: Colors.white,
-              )),
+          // IconButton(
+          //     onPressed: () async {
+          //       for (Suggestion suggestion in await _model!.getAllSuggestions()) {
+          //         _model!.updateFireSuggestion(suggestion);
+          //       }
+          //     },
+          //     icon: const Icon(
+          //       Icons.upload,
+          //       color: Colors.white,
+          //     )),
           IconButton(
               onPressed: () async {
                 for (Suggestion suggestion in await _model!.getAllFireSuggestions()) {

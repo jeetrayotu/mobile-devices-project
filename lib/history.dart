@@ -174,12 +174,26 @@ class historyState extends State<History> {
     }
   }
 
-  Future<void> _deleteSuggestion(Suggestion suggestion) async {
-    notif.sendNotificationNow(
-        'Delete Suggestion', 'Suggestion Deleted', 'Delete');
+  String _getShortLocationName(String fullName) {
+    // Split the full address by commas and return the first part
+    List<String> parts = fullName.split(',');
+    return parts.isNotEmpty ? parts[0].trim() : fullName;
+  }
 
-    await model!
-        .deleteSuggestionByName(suggestion.displayName, table: 'history');
+  Future<void> _deleteSuggestion(Suggestion suggestion) async {
+    // Extract a shorter name from the full address (displayName)
+    String locationName = _getShortLocationName(suggestion.displayName);
+
+    notif.sendNotificationNow(
+      'Delete Suggestion',
+      'Suggestion "$locationName" has been deleted',
+      'Delete',
+    );
+
+    await model!.deleteSuggestionByName(
+      suggestion.displayName,
+      table: 'history',
+    );
     setState(() {});
   }
 

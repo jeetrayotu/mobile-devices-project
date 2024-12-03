@@ -59,7 +59,7 @@ class _MyMapPageState extends State<MyMapPage> {
   // 43.891190, -78.862850
   LatLng? _destination; // Selected destination coordinates
   LatLng?
-      _meetup; // Meetup spot halfway between destination and current location.
+  _meetup; // Meetup spot halfway between destination and current location.
   List<LatLng> _routePoints = []; // Points for the polyline route
   SuggestionModel? _model;
   List<String> tables = [];
@@ -106,15 +106,15 @@ class _MyMapPageState extends State<MyMapPage> {
       context,
       MaterialPageRoute(
           builder: (context) => Favourites(
-                title: 'My Favourites',
-                model: _model,
-              )),
+            title: 'My Favourites',
+            model: _model,
+          )),
     );
   }
 
   showOptions(BuildContext context) async {
     var results =
-        await showDialog(context: context, builder: (context) => showPopup());
+    await showDialog(context: context, builder: (context) => showPopup());
 
     return results;
   }
@@ -247,7 +247,7 @@ class _MyMapPageState extends State<MyMapPage> {
           headers: {
             'Authorization': _orsApiKey,
             'Accept':
-                'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+            'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
             'Content-Type': 'application/json; charset=utf-8'
           },
           // Adapted From: https://chatgpt.com/share/6737943d-d888-8000-9fa7-a08c34c1d057
@@ -270,7 +270,7 @@ class _MyMapPageState extends State<MyMapPage> {
 
         if (data['features'] != null && data['features'].isNotEmpty) {
           final coordinates =
-              data['features'][0]['geometry']['coordinates'] as List;
+          data['features'][0]['geometry']['coordinates'] as List;
 
           _meetup = LatLng(coordinates[1], coordinates[0]);
           print("Meetup Coordinates: $_meetup"); // Debug print
@@ -301,7 +301,7 @@ class _MyMapPageState extends State<MyMapPage> {
           headers: {
             'Authorization': _orsApiKey,
             'Accept':
-                'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+            'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
             'Content-Type': 'application/json; charset=utf-8'
           },
           // Adapted From: https://chatgpt.com/share/6737943d-d888-8000-9fa7-a08c34c1d057
@@ -320,7 +320,7 @@ class _MyMapPageState extends State<MyMapPage> {
 
         if (data['features'].isNotEmpty) {
           final coordinates =
-              data['features'][0]['geometry']['coordinates'] as List;
+          data['features'][0]['geometry']['coordinates'] as List;
 
           setState(() {
             _routePoints = coordinates.map((coord) {
@@ -433,7 +433,7 @@ class _MyMapPageState extends State<MyMapPage> {
               children: [
                 TileLayer(
                   urlTemplate:
-                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                   subdomains: ['a', 'b', 'c'],
                 ),
                 MarkerLayer(
