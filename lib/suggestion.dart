@@ -133,7 +133,7 @@ class SuggestionModel {
       where: "displayName = ?",
       whereArgs: [name],
     );
-    await FirebaseFirestore.instance.collection('grades').doc(name).delete();
+    await FirebaseFirestore.instance.collection(table).doc(name).delete();
   }
 
   Future<List<Suggestion>> getAllFireSuggestions({String table = "history"}) async {

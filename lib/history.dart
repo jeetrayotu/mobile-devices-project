@@ -114,7 +114,7 @@ class HistoryState extends State<History> {
                 if (snapshot.data!.isEmpty) {
                   return Center(
                       child: Padding(
-                          padding: EdgeInsets.all(70),
+                          padding: const EdgeInsets.all(70),
                           child: Text(FlutterI18n.translate(context, "history.empty"))));
                 }
 
