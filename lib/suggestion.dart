@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:dio/dio.dart';
@@ -92,11 +91,6 @@ class SuggestionModel {
           }
         })
             .toList();
-
-        // Save external suggestions to history for future use
-        // for (var suggestion in externalSuggestions) {
-        //   await insertSuggestion(suggestion);
-        // }
 
         // Adapted From:
         // Answer: https://stackoverflow.com/a/51446910

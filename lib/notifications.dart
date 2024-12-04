@@ -1,7 +1,7 @@
 import 'dart:io'; // Import to detect platform (iOS or Android)
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'; // Import for notifications
 
-// adpapted from 6a-InClassExamples-notifications.dart
+// adapted from 6a-InClassExamples-notifications.dart
 
 // Class to manage notifications
 class Notifications {

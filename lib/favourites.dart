@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'history.dart';
 import 'notifications.dart';
 import 'suggestion.dart';
 
@@ -71,7 +70,6 @@ class _FavouritesState extends State<Favourites> {
       body: model == null
           ? const Center(child: CircularProgressIndicator())
           : FutureBuilder<List<Suggestion>>(
-              // future: model!.getAllSuggestions(),
               future: model!.getAllSuggestions(table: "favourites"),
               builder: (BuildContext context,
                   AsyncSnapshot<List<Suggestion>> snapshot) {
@@ -91,7 +89,7 @@ class _FavouritesState extends State<Favourites> {
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       child: Text(FlutterI18n.translate(context, "favourites.noFavourites")),
                     )
                   );
@@ -106,8 +104,7 @@ class _FavouritesState extends State<Favourites> {
                         // Adapted From: https://www.dhiwise.com/post/how-to-implement-flutter-swipe-action-cell-in-mobile-app
                         background: Row(children: <Widget>[
                           Padding(
-                              padding: EdgeInsets.only(left: 12),
-                              // child: Icon(Icons.favorite, color: Colors.deepPurpleAccent),
+                              padding: const EdgeInsets.only(left: 12),
                               child: Row(children: <Widget>[
                                 Text(
                                   FlutterI18n.translate(context, "favourites.haha"),
@@ -133,7 +130,7 @@ class _FavouritesState extends State<Favourites> {
                                       color: Colors.deepPurpleAccent),
                                 )
                               ])),
-                          Spacer(),
+                          const Spacer(),
                         ]),
                         secondaryBackground: const Row(children: <Widget>[
                           Spacer(),

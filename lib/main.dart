@@ -14,13 +14,11 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'settings.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 
 void main() async {
-  // await dotenv.load(fileName: "key.env"); // Ensure dotenv is loaded
+  await dotenv.load(fileName: "key.env"); // Ensure dotenv is loaded
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -57,9 +55,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// final String _orsApiKey = dotenv.env['ORS_API_KEY'] ?? ''; // Load API key from .env
-final String _orsApiKey =
-    "5b3ce3597851110001cf6248915fcc15b154412d8281d6dd9c531ddf";
+// Load API key from .env
+final String _orsApiKey = dotenv.env['ORS_API_KEY'] ?? "5b3ce3597851110001cf6248915fcc15b154412d8281d6dd9c531ddf";
 
 class MyMapPage extends StatefulWidget {
   @override
@@ -72,10 +69,10 @@ class _MyMapPageState extends State<MyMapPage> {
   final TextEditingController _searchController = TextEditingController();
   List<Suggestion> _suggestions = [];
 
-  var textStyle = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
-  var headerStyle = TextStyle(fontSize: 50, fontWeight: FontWeight.bold);
+  var textStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+  var headerStyle = const TextStyle(fontSize: 50, fontWeight: FontWeight.bold);
 
-  LatLng _currentCenter = LatLng(43.9458, -78.8964); // Ontario Tech University
+  final LatLng _currentCenter = LatLng(43.9458, -78.8964); // Ontario Tech University
   // 43.891190, -78.862850
   LatLng? _destination; // Selected destination coordinates
   LatLng?
@@ -105,10 +102,6 @@ class _MyMapPageState extends State<MyMapPage> {
         }
       },
     ));
-    // TODO
-    // for (Suggestion suggestion.dart in await _model!.getAllSuggestions(comparator: _comparator)) {
-    //   _model!.deleteSuggestionByName(suggestion.dart.displayName);
-    // }
     print(await _model!.getAllSuggestions());
     setState(() {});
   }
@@ -203,7 +196,7 @@ class _MyMapPageState extends State<MyMapPage> {
                 Text("${FlutterI18n.translate(context, "coordinates.latitude")}: ${_meetup!.latitude}"),
                 Text("${FlutterI18n.translate(context, "coordinates.longitude")}: ${_meetup!.longitude}"),
                 // in case you want to add anything, add it here
-                //no need, its just a debug method now
+                // no need, its just a debug method now
               ],
             ),
             actions: [
@@ -432,9 +425,7 @@ class _MyMapPageState extends State<MyMapPage> {
                       hintText: FlutterI18n.translate(context, "main.search"),
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
-                          onPressed: () {
-                            var result = showOptions(context);
-                          },
+                          onPressed: () => showOptions(context),
                           icon: const Icon(Icons.menu))),
                   onChanged: _getSuggestions,
                 ),
